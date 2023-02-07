@@ -56,13 +56,13 @@ CREATE TABLE IF NOT EXISTS spec.pipeline (
 );
 
 CREATE TABLE IF NOT EXISTS spec.schedule (
-  pid             INT       GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  is_deleted      BOOLEAN   DEFAULT FALSE,
-  event_by        INT NOT NULL DEFAULT 1,
-  created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  pipeline_pid    INT NOT NULL REFERENCES spec.pipeline (pid),
-  scheduled_at    VARCHAR NOT NULL
+  pid          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  is_deleted   BOOLEAN DEFAULT FALSE,
+  event_by     INT     NOT NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 DEFAULT 1,
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  pipeline_pid INT     NOT NULL REFERENCES spec.pipeline (pid),
+  scheduled_at VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ingestion.file_tracker (
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS ingestion.file_tracker (
   created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   uploaded_file_name VARCHAR NOT NULL,
-  system_file_name   VARCHAR,
+  system_file_name   VARCHAR UNIQUE,
   ingestion_type     VARCHAR NOT NULL,
   ingestion_name     VARCHAR NOT NULL,
   file_status        VARCHAR NOT NULL,
