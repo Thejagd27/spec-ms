@@ -47,7 +47,7 @@ export class PipelineService {
         else {
             let queryResult = checkName('pipeline_name', "pipeline");
             queryResult = queryResult.replace('$1', `${pipelineData?.pipeline_name?.toLowerCase()}`);
-            const resultPipeName = await queryRunner.query(queryResult);
+            const resultPipeName = await this.dataSource.query(queryResult);
             if (resultPipeName.length > 0) {
                 return {code: 400, error: "Pipeline name already exists"}
             }
