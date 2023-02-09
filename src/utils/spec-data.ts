@@ -640,20 +640,30 @@ export const datasetSchemaData = {
                                                             "shouldnotnull": true,
                                                             "properties": {
                                                                 "type": {
+                                                                    "type": "string",
+                                                                    "pattern": "string",
+                                                                    "shouldnotnull": true
+                                                                },
+                                                                "pattern":{
                                                                     "type": "string"
                                                                 }
                                                             },
-                                                            "required": ["type"]
+                                                            "required": ["type","pattern"]
                                                         },
                                                         "denominator_col": {
                                                             "type": "object",
                                                             "shouldnotnull": true,
                                                             "properties": {
                                                                 "type": {
+                                                                    "type": "string",
+                                                                    "pattern": "string",
+                                                                    "shouldnotnull": true
+                                                                },
+                                                                "pattern":{
                                                                     "type": "string"
                                                                 }
                                                             },
-                                                            "required": ["type"]
+                                                            "required": ["type","pattern"]
                                                         },
                                                         "update_cols": {
                                                             "type": "array",
@@ -738,46 +748,61 @@ export const datasetSchemaData = {
                                                             "properties": {
                                                                 "type": {
                                                                     "type": "string",
+                                                                    "pattern": "object",
                                                                     "shouldnotnull": true
                                                                 },
                                                                 "properties": {
                                                                     "type": "object",
                                                                     "shouldnotnull": true,
                                                                     "properties": {
-                                                                        "type": {
-                                                                            "type": "string",
-                                                                            "pattern": "object",
-                                                                            "shouldnotnull": true
-                                                                        },
+                                            
                                                                         "filter_col": {
                                                                             "type": "object",
                                                                             "shouldnotnull": true,
                                                                             "properties": {
                                                                                 "type": {
-                                                                                    "type": "string"
+                                                                                    "type": "string",
+                                                                                    "pattern": "string",
+                                                                                    "shouldnotnull": true
+                                                                                },
+                                                                                "pattern":{
+                                                                                    "type": "string",
+                                                                                    "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type"]
+                                                                            "required": ["type","pattern"]
                                                                         },
                                                                         "filter_type": {
                                                                             "type": "object",
                                                                             "shouldnotnull": true,
                                                                             "properties": {
                                                                                 "type": {
-                                                                                    "type": "string"
+                                                                                    "type": "string",
+                                                                                    "pattern": "string",
+                                                                                    "shouldnotnull": true
+                                                                                },
+                                                                                "pattern":{
+                                                                                    "type": "string",
+                                                                                    "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type"]
+                                                                            "required": ["type","pattern"]
                                                                         },
                                                                         "filter": {
                                                                             "type": "object",
                                                                             "shouldnotnull": true,
                                                                             "properties": {
                                                                                 "type": {
-                                                                                    "type": "string"
+                                                                                    "type": "string",
+                                                                                    "pattern": "string",
+                                                                                    "shouldnotnull": true
+                                                                                },
+                                                                                "pattern":{
+                                                                                    "type": "string",
+                                                                                    "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type"]
+                                                                            "required": ["type","pattern"]
                                                                         }
                                                                     },
                                                                     "required": [
@@ -785,11 +810,34 @@ export const datasetSchemaData = {
                                                                         "filter_type",
                                                                         "filter"
                                                                     ]
+                                                                },
+                                                                "required":{
+                                                                    "type": "array",
+                                                                    "shouldnotnull": true,
+                                                                    "maxItems": 3,
+                                                                    "items": [
+                                                                        {
+                                                                            "type": "string",
+                                                                            "pattern": "filter_col",
+                                                                            "shouldnotnull": true
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "pattern": "filter_type",
+                                                                            "shouldnotnull": true
+                                                                        },
+                                                                        {
+                                                                            "type": "string",
+                                                                            "pattern": "filter",
+                                                                            "shouldnotnull": true
+                                                                        }
+                                                                    ]
                                                                 }
                                                             },
                                                             "required": [
                                                                 "type",
-                                                                "properties"
+                                                                "properties",
+                                                                "required"
                                                             ]
                                                         }
                                                     },
