@@ -16,6 +16,7 @@ export class ScheduleService {
 
     async schedulePipeline(scheduleData: scheduleDto) {
         let isValidSchema: any;
+        let transformerName = "";
         const queryRunner = this.dataSource.createQueryRunner();
         isValidSchema = await this.specService.ajvValidator(scheduleSchema, scheduleData);
         if (isValidSchema.errors) {
@@ -33,7 +34,7 @@ export class ScheduleService {
                 if (resultPipeName.length === 1) {
                     queryRunner.startTransaction();
                     try {
-                        const result = await this.pipelineService.CreatePipeline(queryRunner, scheduleData?.pipeline_name, scheduleData?.scheduled_at)
+                        const result = await this.pipelineService.CreatePipeline(transformerName, scheduleData?.pipeline_name, scheduleData?.scheduled_at)
                         if (result?.code === 200) {
                             let checkPipelinePid = checkRecordExists('pipeline_pid', 'schedule');
                             checkPipelinePid = checkPipelinePid.replace('$1', resultPipeName[0].pid);

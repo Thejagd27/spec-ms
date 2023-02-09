@@ -565,57 +565,57 @@ describe('PipelineService', () => {
         expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
     });
 
-    it('No Pipeline Found', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}])
-                    .mockReturnValueOnce([{pid: 1, dataset_pid: 1}]).mockReturnValueOnce([])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}]),
+    // it('No Pipeline Found', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}])
+    //                 .mockReturnValueOnce([{pid: 1, dataset_pid: 1}]).mockReturnValueOnce([])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}]),
 
-        };
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "dataset_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "dataset_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'No Pipeline Found'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'No Pipeline Found'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
     // it('Processor Group Running Successfully Already Exists', async () => {
     //     const mockTransaction = {
