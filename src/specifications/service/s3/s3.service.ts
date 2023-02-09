@@ -280,7 +280,7 @@ export class S3Service {
                                     "comments": "",
                                     "autoTerminatedRelationships": [],
                                     "properties": {
-                                        "Input Directory": "/opt/nifi/nifi-current/padmanabha/"
+                                        "Input Directory": "/archived_data"
                                     }
                                 },
                                 "state": "STOPPED"

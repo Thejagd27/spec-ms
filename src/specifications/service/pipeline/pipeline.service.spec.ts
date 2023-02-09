@@ -228,7 +228,21 @@ describe('PipelineService', () => {
                 }
             ]
         };
-        let result = {code: 400, error: "Invalid pipeline type"};
+        let result = {code: 400, error: [
+            {
+                "instancePath": "/pipeline_type",
+                "schemaPath": "#/properties/pipeline_type/enum",
+                "keyword": "enum",
+                "params": {
+                    "allowedValues": [
+                        "ingest_to_db",
+                        "dimension_to_db",
+                        "dataset_to_db"
+                    ]
+                },
+                "message": "must be equal to one of the allowed values"
+            }
+        ]};
         expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
     });
 

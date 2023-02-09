@@ -73,7 +73,7 @@ export const dimensionSchemaData = {
                                         },
                                         "required": {
                                             "type": "array",
-                                            "shouldnotnull": false
+                                            "shouldnotnull": true,
                                         }
                                     },
                                     "required": ["type", "properties", "required"],
@@ -91,10 +91,16 @@ export const dimensionSchemaData = {
                             "shouldnotnull": true,
                             "properties": {
                                 "type": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "pattern": "string",
+                                    "shouldnotnull": true
+                                },
+                                "pattern":{
+                                    "type": "string",
+                                    "shouldnotnull": true
                                 }
                             },
-                            "required": ["type"]
+                            "required": ["type", "pattern"]
                         }
                     },
                     "required": ["dimension_name", "dimension"]
@@ -194,7 +200,7 @@ export const eventSchemaData = {
                                         },
                                         "required": {
                                             "type": "array",
-                                            "shouldnotnull": false
+                                            "shouldnotnull": true
                                         }
                                     },
                                     "required": ["type", "properties", "required"],
@@ -435,10 +441,16 @@ export const datasetSchemaData = {
                                             "shouldnotnull": true,
                                             "properties": {
                                                 "type": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "pattern": "string",
+                                                    "shouldnotnull": true
+                                                },
+                                                "pattern":{
+                                                    "type": "string",
+                                                    "shouldnotnull": true
                                                 }
                                             },
-                                            "required": ["type"]
+                                            "required": ["type","pattern"]
                                         },
                                         "column": {
                                             "type": "array",
@@ -453,10 +465,16 @@ export const datasetSchemaData = {
                                             "shouldnotnull": true,
                                             "properties": {
                                                 "type": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "pattern": "string",
+                                                    "shouldnotnull": true
+                                                },
+                                                "pattern":{
+                                                    "type": "string",
+                                                    "shouldnotnull": true
                                                 }
                                             },
-                                            "required": ["type"]
+                                            "required": ["type","pattern"]
                                         }
                                     },
                                     "required": [
@@ -606,10 +624,16 @@ export const datasetSchemaData = {
                                                             "shouldnotnull": true,
                                                             "properties": {
                                                                 "type": {
-                                                                    "type": "string"
+                                                                    "type": "string",
+                                                                    "pattern": "string",
+                                                                    "shouldnotnull": true
+                                                                },
+                                                                "pattern":{
+                                                                    "type": "string",
+                                                                    "shouldnotnull": true
                                                                 }
                                                             },
-                                                            "required": ["type"]
+                                                            "required": ["type","pattern"]
                                                         },
                                                         "numerator_col": {
                                                             "type": "object",
@@ -871,3 +895,22 @@ export const scheduleSchema = {
         "scheduled_at",
     ],
 };
+
+export const schemaPipeline = {
+    "type": "object",
+    "properties": {
+        "pipeline_name": {
+            "type": "string",
+            "shouldnotnull": true
+        },
+        "pipeline_type": {
+            "type": "string",
+            "enum": ["ingest_to_db", "dimension_to_db", "dataset_to_db"],
+            "shouldnotnull": true
+        }
+    },
+    "required": [
+        "pipeline_name",
+        "pipeline_type",
+    ],
+}
