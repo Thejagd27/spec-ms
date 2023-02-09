@@ -2,7 +2,8 @@ import {HttpCustomService} from './../HttpCustomService';
 import {
     PipelineSchemaDimensiontoDB,
     PipelineSchemaDatasettoDB,
-    PipelineSchemaIngesttoDB
+    PipelineSchemaIngesttoDB,
+    schemaPipeline
 } from './../../../utils/spec-data';
 import {Injectable} from '@nestjs/common';
 import {InjectDataSource} from '@nestjs/typeorm';
@@ -23,6 +24,11 @@ export class PipelineService {
         let checkCoulmnPid: string[];
         const queryRunner = this.dataSource.createQueryRunner();
         let PipeStr = pipelineData?.pipeline_type?.toLowerCase();
+        let schemavalidator:any = await this.specService.ajvValidator(schemaPipeline,pipelineData)
+        if (schemavalidator.errors) {
+            return {code: 400, error: schemavalidator.errors}
+        }
+        else{
         switch (PipeStr) {
             case 'ingest_to_db':
                 isValidSchema = await this.specService.ajvValidator(PipelineSchemaIngesttoDB, pipelineData);
@@ -33,11 +39,8 @@ export class PipelineService {
             case 'dataset_to_db':
                 isValidSchema = await this.specService.ajvValidator(PipelineSchemaDatasettoDB, pipelineData);
                 break;
-            default:
-                return {code: 400, error: "Invalid pipeline type"}
-        }
-
-
+        }}
+    
         if (isValidSchema.errors) {
             return {code: 400, error: isValidSchema.errors}
         }
