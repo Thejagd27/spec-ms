@@ -1,6 +1,6 @@
 import {EventService} from './../service/event/event.service';
 import {DimensionService} from './../service/dimension/dimension.service';
-import {Body, Controller, Post, Res} from '@nestjs/common';
+import {Body, Controller, Get, Post, Res} from '@nestjs/common';
 import {Response} from 'express';
 import {pipelineDto, Result, specDataset,specTrasformer, specDimensionDTO,scheduleDto, specEventDTO, s3DTO} from '../dto/specData.dto';
 import {TransformerService} from '../service/transformer/transformer.service';
@@ -13,6 +13,12 @@ import { S3Service } from '../service/s3/s3.service';
 @Controller('spec')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService, private pipelineService: PipelineService, private scheduleService: ScheduleService,private s3service:S3Service) {
+    }
+
+    @Get('/hello')
+    async getHello()
+    {
+        return {"message":"Hello World"}
     }
 
     @Post('/dimension')
