@@ -76,6 +76,16 @@ CREATE TABLE IF NOT EXISTS ingestion.file_tracker (
   ingestion_type     VARCHAR NOT NULL,
   ingestion_name     VARCHAR NOT NULL,
   file_status        VARCHAR NOT NULL,
-  filesize           NUMERIC NOT NULL,
-  processed_count    INT DEFAULT 0
+  filesize           NUMERIC NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ingestion.file_pipeline_tracker (
+  pid              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  is_deleted       BOOLEAN DEFAULT FALSE,
+  event_by         INT     NOT NULL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             DEFAULT 1,
+  created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  file_tracker_pid INTEGER NOT NULL REFERENCES ingestion.file_tracker (pid),
+  pipeline_pid     INTEGER NOT NULL,
+  status           INTEGER NOT NULL DEFAULT 0
 );
