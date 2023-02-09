@@ -58,7 +58,7 @@ export class PipelineService {
                 let transformer_name = pipelineData?.pipeline[0]['transformer_name'];
                 let checkTransformerQuery = checkName('transformer_file', 'transformer');
                 checkTransformerQuery = checkTransformerQuery.replace('$1', `${transformer_name}`);
-                let checkTransformerResult = await queryRunner.query(checkTransformerQuery);
+                let checkTransformerResult = await this.dataSource.query(checkTransformerQuery);
                 if (checkTransformerResult.length == 0) {
                     return {code: 400, error: 'Transformer not found'}
                 }
