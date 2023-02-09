@@ -28,6 +28,7 @@ export class PipelineService {
         if (schemavalidator.errors) {
             return {code: 400, error: schemavalidator.errors}
         }
+        
         else{
         switch (PipeStr) {
             case 'ingest_to_db':
