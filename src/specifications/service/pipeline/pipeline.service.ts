@@ -48,7 +48,7 @@ export class PipelineService {
         else {
             let queryResult = checkName('pipeline_name', "pipeline");
             queryResult = queryResult.replace('$1', `${pipelineData?.pipeline_name?.toLowerCase()}`);
-            const resultPipeName = await this.dataSource.query(queryResult);
+            const resultPipeName = await queryRunner.query(queryResult);
             if (resultPipeName.length > 0) {
                 return {code: 400, error: "Pipeline name already exists"}
             }
@@ -59,7 +59,7 @@ export class PipelineService {
                 let transformer_name = pipelineData?.pipeline[0]['transformer_name'];
                 let checkTransformerQuery = checkName('transformer_file', 'transformer');
                 checkTransformerQuery = checkTransformerQuery.replace('$1', `${transformer_name}`);
-                let checkTransformerResult = await this.dataSource.query(checkTransformerQuery);
+                let checkTransformerResult = await queryRunner.query(checkTransformerQuery);
                 if (checkTransformerResult.length == 0) {
                     return {code: 400, error: 'Transformer not found'}
                 }
@@ -95,7 +95,7 @@ export class PipelineService {
                                 return {code: 400, error: "Cannot find dataset name"}
                             }
                         }
-                        const result = await this.CreatePipeline(transformer_name, pipelineData?.pipeline_name?.toLowerCase());
+                        const result = await this.CreatePipeline(queryRunner, pipelineData?.pipeline_name?.toLowerCase());
                         if (result.code == 400) {
                             await queryRunner.rollbackTransaction();
                         }
@@ -116,12 +116,12 @@ export class PipelineService {
         }
     
 
-    async CreatePipeline(transformerName, pipelineName, schedulePeriod = undefined) {
+    async CreatePipeline(queryRunner, pipelineName, schedulePeriod = undefined) {
         try {
-            // const queryStr = await getPipelineSpec(pipelineName);
-            // const queryResult = await queryRunner.query(queryStr);
-            if (true) {
-                const transformer_file = transformerName;
+            const queryStr = await getPipelineSpec(pipelineName);
+            const queryResult = await queryRunner.query(queryStr);
+            if (queryResult.length === 1) {
+                const transformer_file = queryResult[0].transformer_file;
                 let nifi_root_pg_id, pg_list, pg_source;
                 const processor_group_name = pipelineName;
                 let data = {};
