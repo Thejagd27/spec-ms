@@ -12,6 +12,7 @@ describe('ScheduleService', () => {
     createQueryRunner: jest.fn().mockImplementation(() => ({
       query: jest.fn().mockReturnValue([])
     })),
+    query: jest.fn().mockReturnValue([])
   };
 
   const mockHttpservice = {
@@ -92,11 +93,13 @@ describe('ScheduleService', () => {
   it('Could not create schedule for student_count_pipe',async () => {
     const mockTransacation1 = {
       createQueryRunner: jest.fn().mockImplementation(() => ({
-        query: jest.fn().mockReturnValue([{length:1}]),
+        connect: jest.fn(),
+        query: jest.fn(),
         startTransaction:jest.fn(),
         release:jest.fn(),
         rollbackTransaction:jest.fn()
       })),
+      query: jest.fn().mockReturnValue([{length:1}])
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -143,8 +146,9 @@ describe('ScheduleService', () => {
         release: jest.fn(),
         rollbackTransaction: jest.fn(),
         commitTransaction: jest.fn(),
-        query: jest.fn().mockReturnValueOnce([{ pid: 1 }]).mockReturnValueOnce([]).mockReturnValueOnce([])
+        query: jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([]).mockReturnValueOnce([])
       })),
+      query:jest.fn().mockReturnValueOnce([{ length: 1 }])
     };
 
 
@@ -184,7 +188,7 @@ describe('ScheduleService', () => {
     expect(await service.schedulePipeline(input)).toStrictEqual(result)
   });
 
-  it('pipe line has been successfully scheduled', async () => {
+  it('pipeline has been successfully scheduled', async () => {
     const mockTransacation3 = {
       createQueryRunner: jest.fn().mockImplementation(() => ({
         connect: jest.fn(),
@@ -192,8 +196,9 @@ describe('ScheduleService', () => {
         release: jest.fn(),
         rollbackTransaction: jest.fn(),
         commitTransaction: jest.fn(),
-        query: jest.fn().mockReturnValueOnce([{ pid: 1 }]).mockReturnValueOnce([]).mockReturnValueOnce([{pid:1}])
+        query: jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([{pid:1}])
       })),
+      query:jest.fn().mockReturnValueOnce([{ length: 1 }])
     };
 
 

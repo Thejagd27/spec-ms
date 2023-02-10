@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { scheduleDto } from '../../dto/specData.dto';
-import { checkName, checkRecordExists, insertIntoSchedule, updateSchedule } from '../../queries/queries';
+import {  checkRecordExists, getPipelineSpec, insertIntoSchedule, updateSchedule } from '../../queries/queries';
 import { scheduleSchema } from '../../../utils/spec-data';
 import { DataSource } from 'typeorm';
 import { GenericFunction } from '../genericFunction';
-import { HttpCustomService } from '../HttpCustomService';
 import { PipelineService } from '../pipeline/pipeline.service'
 var cronValidator = require('cron-expression-validator');
 
@@ -16,23 +15,24 @@ export class ScheduleService {
 
     async schedulePipeline(scheduleData: scheduleDto) {
         let isValidSchema: any;
-        let transformerName = "";
+        let transformerName: string = "";
         const queryRunner = this.dataSource.createQueryRunner();
         isValidSchema = await this.specService.ajvValidator(scheduleSchema, scheduleData);
         if (isValidSchema.errors) {
             return { code: 400, error: isValidSchema.errors }
         }
         else {
-            var result = cronValidator.isValidCronExpression(scheduleData.scheduled_at, { error: true });
+            let result = cronValidator.isValidCronExpression(scheduleData.scheduled_at, { error: true });
             if (result.errorMessage) {
                 return { code: 400, error: result.errorMessage }
             }
             else {
-                let queryResult = checkName('pipeline_name', "pipeline");
-                queryResult = queryResult.replace('$1', `${scheduleData?.pipeline_name?.toLowerCase()}`);
-                const resultPipeName = await queryRunner.query(queryResult);
+                let queryResult = getPipelineSpec(scheduleData?.pipeline_name?.toLowerCase());
+                const resultPipeName = await this.dataSource.query(queryResult);
                 if (resultPipeName.length === 1) {
-                    queryRunner.startTransaction();
+                    transformerName = resultPipeName[0]?.transformer_file;
+                    await queryRunner.connect();
+                    await queryRunner.startTransaction();
                     try {
                         const result = await this.pipelineService.CreatePipeline(transformerName, scheduleData?.pipeline_name, scheduleData?.scheduled_at)
                         if (result?.code === 200) {

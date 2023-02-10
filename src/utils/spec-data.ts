@@ -395,7 +395,8 @@ export const datasetSchemaData = {
         },
         "dataset_name": {
             "type": "string",
-            "shouldnotnull": true
+            "shouldnotnull": true,
+            "maxLength": 63
         },
         "input": {
             "type": "object",
