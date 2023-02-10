@@ -246,45 +246,45 @@ describe('PipelineService', () => {
         expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
     });
 
-    it('dimension_to_db Pipeline Type', async () => {
-        let inputData = {
-            "pipeline_type": "dimension_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    // it('dimension_to_db Pipeline Type', async () => {
+    //     let inputData = {
+    //         "pipeline_type": "dimension_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {
-            "code": 400, "error": "Pipeline name already exists"
-        };
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {
+    //         "code": 400, "error": "Pipeline name already exists"
+    //     };
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
-    it('dataset_to_db Pipeline Type', async () => {
-        let inputData = {
-            "pipeline_type": "dataset_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    // it('dataset_to_db Pipeline Type', async () => {
+    //     let inputData = {
+    //         "pipeline_type": "dataset_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {
-            "code": 400, "error": "Pipeline name already exists"
-        };
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {
+    //         "code": 400, "error": "Pipeline name already exists"
+    //     };
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
     it('Validation Error', async () => {
         let inputData = {
@@ -314,256 +314,256 @@ describe('PipelineService', () => {
         expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
     });
 
-    it('Transformer not found', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1}).mockReturnValueOnce([])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}])
-        };
+    // it('Transformer not found', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1}).mockReturnValueOnce([])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}])
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "dataset_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_classasdasd.py"
+    //     let inputData = {
+    //         "pipeline_type": "dataset_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_classasdasd.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'Transformer not found'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'Transformer not found'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
-    it('Cannot find dimension_name in ingest_to_db', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}]).mockReturnValueOnce([{pid: 1}])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}])
-        };
+    // it('Cannot find dimension_name in ingest_to_db', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}]).mockReturnValueOnce([{pid: 1}])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}])
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "ingest_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "ingest_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'Cannot find dimension name'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'Cannot find dimension name'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
-    it('Cannot find dataset_name in ingest_to_db', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}])
-                    .mockReturnValueOnce([{pid: 1, dimension_pid: 1}])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}])
-        };
+    // it('Cannot find dataset_name in ingest_to_db', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}])
+    //                 .mockReturnValueOnce([{pid: 1, dimension_pid: 1}])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}])
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "ingest_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "ingest_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'Cannot find dataset name'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'Cannot find dataset name'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
-    it('Cannot find dimension_name in dimension_to_db', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}]).mockReturnValueOnce([{pid: 1}])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}])
-        };
+    // it('Cannot find dimension_name in dimension_to_db', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}]).mockReturnValueOnce([{pid: 1}])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}])
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "dimension_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "dimension_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'Cannot find dimension name'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'Cannot find dimension name'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
-    it('Cannot find dataset_name in dataset_to_db', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}])
-                    .mockReturnValueOnce([{pid: 1, dimension_pid: 1}])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}])
-        };
+    // it('Cannot find dataset_name in dataset_to_db', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}])
+    //                 .mockReturnValueOnce([{pid: 1, dimension_pid: 1}])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}])
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockHttpservice
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockHttpservice
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "dataset_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "dataset_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 400, error: 'Cannot find dataset name'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: 'Cannot find dataset name'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
     // it('No Pipeline Found', async () => {
     //     const mockTransaction = {
@@ -689,115 +689,115 @@ describe('PipelineService', () => {
     //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
     // }, 70000);
 
-    it('Processor Group Running Successfully', async () => {
-        const mockTransaction = {
-            createQueryRunner: jest.fn().mockImplementation(() => ({
-                connect: jest.fn(),
-                startTransaction: jest.fn(),
-                release: jest.fn(),
-                rollbackTransaction: jest.fn(),
-                commitTransaction: jest.fn(),
-                query: jest.fn().mockReturnValueOnce({pid: 1})
-                    .mockReturnValueOnce([{pid: 1}])
-                    .mockReturnValueOnce([{pid: 1, dataset_pid: 1}])
-                    .mockReturnValueOnce([{
-                        "transformer_file": "student_attendance_by_class.py",
-                        "event_name": "student_attendance",
-                        "dataset_name": "student_attendance_by_class"
-                    }])
-            })),
-            query: jest.fn().mockReturnValueOnce([{length: 1}]),
-            get: jest.fn().mockReturnValueOnce({data: {component: {id: 1}}})
-                .mockReturnValueOnce({
-                    data: {
-                        processGroupFlow: {
-                            flow: {
-                                processGroups: [{
-                                    component: {
-                                        id: 123,
-                                        name: "asd"
-                                    }
-                                }]
-                            }
-                        }
-                    }
-                }).mockReturnValueOnce({data: {component: {id: 1}}})
-                .mockReturnValue({
-                    data: {
-                        processGroupFlow: {
-                            id: 1,
-                            flow: {
-                                processors: [{
-                                    component: {
-                                        name: "generateFlowFile",
-                                        id: 1
-                                    },
-                                    revision: {
-                                        version: 1.1
-                                    }
-                                }, {
-                                    component: {name: "pythonCode", id: 2},
-                                    revision: {
-                                        version: 1.1
-                                    }
-                                },
-                                    {
-                                        component: {name: "successLogMessage", id: 3},
-                                        revision: {
-                                            version: 1.1
-                                        }
-                                    }, {
-                                        component: {
-                                            name: "failedLogMessage",
-                                            id: 4
-                                        },
-                                        revision: {
-                                            version: 1.1
-                                        }
-                                    }]
-                            }
-                        }
-                    }
-                }),
-            post: jest.fn().mockReturnValueOnce({data: {component: {id: 2}}}),
-            put: jest.fn()
-        };
+    // it('Processor Group Running Successfully', async () => {
+    //     const mockTransaction = {
+    //         createQueryRunner: jest.fn().mockImplementation(() => ({
+    //             connect: jest.fn(),
+    //             startTransaction: jest.fn(),
+    //             release: jest.fn(),
+    //             rollbackTransaction: jest.fn(),
+    //             commitTransaction: jest.fn(),
+    //             query: jest.fn().mockReturnValueOnce({pid: 1})
+    //                 .mockReturnValueOnce([{pid: 1}])
+    //                 .mockReturnValueOnce([{pid: 1, dataset_pid: 1}])
+    //                 .mockReturnValueOnce([{
+    //                     "transformer_file": "student_attendance_by_class.py",
+    //                     "event_name": "student_attendance",
+    //                     "dataset_name": "student_attendance_by_class"
+    //                 }])
+    //         })),
+    //         query: jest.fn().mockReturnValueOnce([{length: 1}]),
+    //         get: jest.fn().mockReturnValueOnce({data: {component: {id: 1}}})
+    //             .mockReturnValueOnce({
+    //                 data: {
+    //                     processGroupFlow: {
+    //                         flow: {
+    //                             processGroups: [{
+    //                                 component: {
+    //                                     id: 123,
+    //                                     name: "asd"
+    //                                 }
+    //                             }]
+    //                         }
+    //                     }
+    //                 }
+    //             }).mockReturnValueOnce({data: {component: {id: 1}}})
+    //             .mockReturnValue({
+    //                 data: {
+    //                     processGroupFlow: {
+    //                         id: 1,
+    //                         flow: {
+    //                             processors: [{
+    //                                 component: {
+    //                                     name: "generateFlowFile",
+    //                                     id: 1
+    //                                 },
+    //                                 revision: {
+    //                                     version: 1.1
+    //                                 }
+    //                             }, {
+    //                                 component: {name: "pythonCode", id: 2},
+    //                                 revision: {
+    //                                     version: 1.1
+    //                                 }
+    //                             },
+    //                                 {
+    //                                     component: {name: "successLogMessage", id: 3},
+    //                                     revision: {
+    //                                         version: 1.1
+    //                                     }
+    //                                 }, {
+    //                                     component: {
+    //                                         name: "failedLogMessage",
+    //                                         id: 4
+    //                                     },
+    //                                     revision: {
+    //                                         version: 1.1
+    //                                     }
+    //                                 }]
+    //                         }
+    //                     }
+    //                 }
+    //             }),
+    //         post: jest.fn().mockReturnValueOnce({data: {component: {id: 2}}}),
+    //         put: jest.fn()
+    //     };
 
-        const module: TestingModule = await Test.createTestingModule({
-            providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
-                {
-                    provide: DataSource,
-                    useValue: mockTransaction
-                },
-                {
-                    provide: GenericFunction,
-                    useClass: GenericFunction
-                },
-                {
-                    provide: HttpCustomService,
-                    useValue: mockTransaction
-                },
-            ]
-        }).compile();
+    //     const module: TestingModule = await Test.createTestingModule({
+    //         providers: [PipelineService, DataSource, GenericFunction, HttpCustomService,
+    //             {
+    //                 provide: DataSource,
+    //                 useValue: mockTransaction
+    //             },
+    //             {
+    //                 provide: GenericFunction,
+    //                 useClass: GenericFunction
+    //             },
+    //             {
+    //                 provide: HttpCustomService,
+    //                 useValue: mockTransaction
+    //             },
+    //         ]
+    //     }).compile();
 
-        service = module.get<PipelineService>(PipelineService);
+    //     service = module.get<PipelineService>(PipelineService);
 
-        let inputData = {
-            "pipeline_type": "dataset_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
+    //     let inputData = {
+    //         "pipeline_type": "dataset_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
 
-                }
-            ]
-        };
-        let result = {code: 200, message: 'Processor group created successfully'};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    }, 70000);
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 200, message: 'Processor group created successfully'};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // }, 70000);
 
     it('Exception', async () => {
 

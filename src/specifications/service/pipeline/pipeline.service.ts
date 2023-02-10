@@ -28,6 +28,7 @@ export class PipelineService {
         if (schemavalidator.errors) {
             return {code: 400, error: schemavalidator.errors}
         }
+        
         else{
         switch (PipeStr) {
             case 'ingest_to_db':
@@ -47,7 +48,7 @@ export class PipelineService {
         else {
             let queryResult = checkName('pipeline_name', "pipeline");
             queryResult = queryResult.replace('$1', `${pipelineData?.pipeline_name?.toLowerCase()}`);
-            const resultPipeName = await queryRunner.query(queryResult);
+            const resultPipeName = await this.dataSource.query(queryResult);
             if (resultPipeName.length > 0) {
                 return {code: 400, error: "Pipeline name already exists"}
             }
@@ -58,7 +59,7 @@ export class PipelineService {
                 let transformer_name = pipelineData?.pipeline[0]['transformer_name'];
                 let checkTransformerQuery = checkName('transformer_file', 'transformer');
                 checkTransformerQuery = checkTransformerQuery.replace('$1', `${transformer_name}`);
-                let checkTransformerResult = await queryRunner.query(checkTransformerQuery);
+                let checkTransformerResult = await this.dataSource.query(checkTransformerQuery);
                 if (checkTransformerResult.length == 0) {
                     return {code: 400, error: 'Transformer not found'}
                 }
@@ -120,6 +121,7 @@ export class PipelineService {
             // const queryStr = await getPipelineSpec(pipelineName);
             // const queryResult = await queryRunner.query(queryStr);
             if (true) {
+                // const transformer_file = queryResult[0].transformer_file;
                 const transformer_file = transformerName;
                 let nifi_root_pg_id, pg_list, pg_source;
                 const processor_group_name = pipelineName;
