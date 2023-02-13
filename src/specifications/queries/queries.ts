@@ -81,8 +81,8 @@ export function getdatasetName(datasetName: string) {
     return queryStr;
 }
 
-export function getPipelineSpec(pipelineName) {
-    const queryStr = `SELECT transformer_file, event_name, dataset_name
+export function getPipelineSpec(pipelineName: string) {
+    const queryStr = `SELECT pipeline.pid,transformer_file, event_name, dataset_name
     FROM spec.pipeline
     LEFT JOIN spec.event ON event.pid = pipeline.event_pid
     LEFT JOIN spec.dataset ON dataset.pid  = pipeline.dataset_pid
