@@ -117,11 +117,8 @@ export class PipelineService {
     
 
     async CreatePipeline(transformerName, pipelineName, schedulePeriod = undefined) {
-        try {
-            // const queryStr = await getPipelineSpec(pipelineName);
-            // const queryResult = await queryRunner.query(queryStr);
-            if (true) {
-                // const transformer_file = queryResult[0].transformer_file;
+        try {            
+            if (transformerName && transformerName != "") {
                 const transformer_file = transformerName;
                 let nifi_root_pg_id, pg_list, pg_source;
                 const processor_group_name = pipelineName;
@@ -208,7 +205,7 @@ export class PipelineService {
             else {
                 return {
                     code: 400,
-                    error: "No Pipeline Found"
+                    error: "Could not find transformer"
                 }
             }
         }
