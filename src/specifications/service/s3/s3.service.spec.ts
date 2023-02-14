@@ -2,6 +2,7 @@ import { HttpCustomService } from './../HttpCustomService';
 import { Test, TestingModule } from '@nestjs/testing';
 import { S3Service } from './s3.service';
 import { GenericFunction } from '../genericFunction';
+import { s3DTO } from 'src/specifications/dto/specData.dto';
 
 describe('S3Service', () => {
   let service: S3Service;
@@ -35,7 +36,7 @@ describe('S3Service', () => {
 
   it('validation', async () => {
     let input = {
-
+      "schedule_type": "archive"
     }
     let result = {
       code: 400, error: [
@@ -56,7 +57,8 @@ describe('S3Service', () => {
 
   it('cron validation', async () => {
     let input = {
-      "scheduled_at": "gsdg "//giving wrong expression
+      "scheduled_at": "gsdg",//giving wrong expression
+      "schedule_type":"archive"
     }
     let result = {
       code: 400, error: "Unexpected end of expression"
@@ -139,7 +141,8 @@ describe('S3Service', () => {
 
     service = module.get<S3Service>(S3Service);
     let input = {
-      "scheduled_at": "0 0/2 * 1/1 * ? *"
+      "scheduled_at": "0 0/2 * 1/1 * ? *",
+      "schedule_type": "archive"
     }
     let result = {
       code: 200, message: "uploadToS3 Processor group running successfully"
@@ -174,7 +177,8 @@ describe('S3Service', () => {
 
     service = module.get<S3Service>(S3Service);
     let input = {
-      "scheduled_at": "0 0/2 * 1/1 * ? *"
+      "scheduled_at": "0 0/2 * 1/1 * ? *",
+      "schedule_type":"archive"
     }
     let resultOutput = "Error: exception test";
 

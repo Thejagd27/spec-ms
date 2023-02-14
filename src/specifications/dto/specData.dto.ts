@@ -94,5 +94,7 @@ export class scheduleDto {
 
 export class s3DTO { 
     @ApiProperty()
-    scheduled_at?:string
+    scheduled_at?:string;
+    @ApiProperty()
+    scheduled_type:string;
 }
