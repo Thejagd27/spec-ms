@@ -14,7 +14,7 @@ export class S3Service {
                     "type": "string",
                     "shouldnotnull": true
                 },
-                "schedule_type": {
+                "scheduled_type": {
                     "type": "string",
                     "shouldnotnull": true,
                     "enum": ["archive","error"]
@@ -23,7 +23,7 @@ export class S3Service {
             },
             "required": [
                 "scheduled_at",
-                "schedule_type"
+                "scheduled_type"
             ],
         }
         let isValidSchema: any = await this.specService.ajvValidator(s3Schema, scheduleExpr);
@@ -45,6 +45,24 @@ export class S3Service {
                 nifi_root_pg_id = res.data['component']['id'];
                 let resp = await this.http.get(`${process.env.URL}/nifi-api/flow/process-groups/${nifi_root_pg_id}`);
                 pg_list = resp.data;
+                let counter = 0;
+                let pg_group = pg_list['processGroupFlow']['flow']['processGroups']
+                for (let pg of pg_group) {
+                    if (pg.component.name == processor_group_name) {
+                        pg_source = pg;
+                        counter = counter + 1;
+                        data = {
+                            "id": pg_source['component']['id'],
+                            "state": "STOPPED",  // RUNNING or STOP
+                            "disconnectedNodeAcknowledged": false
+                        };
+                        console.log('pipeline.service.: STOPPED');
+                        await this.http.put(`${process.env.URL}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data,)
+                        break;
+                    }
+                }
+                if(counter == 0)
+                { 
                 let response = await this.addProcessorGroup(processor_group_name);
                 pg_source = response['data'];
                 await this.addProcessor('org.apache.nifi.processors.standard.GetFile', 'GetFile', pg_source['component']['id']);
@@ -74,6 +92,23 @@ export class S3Service {
                     code: 200,
                     message: `${processor_group_name} Processor group running successfully`
                 }
+            }
+            else{
+                await this.processSleep(5000);
+                await this.updateProcessorProperty(pg_source['component']['id'], 'PutS3Object',scheduleExpr.scheduled_at,selectedBucket,selectedFolder);
+                await this.updateProcessorProperty(pg_source['component']['id'], 'GetFile', scheduleExpr.scheduled_at,selectedBucket, selectedFolder);
+                data = {
+                    "id": pg_source['component']['id'],
+                    "state": "RUNNING",  // RUNNING or STOP
+                    "disconnectedNodeAcknowledged": false
+                };
+                console.log('pipeline.service.: RUNNING');
+                await this.http.put(`${process.env.URL}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data); 
+                return {
+                    code: 200,
+                    message: `${processor_group_name} Processor group running successfully`
+                }
+            }
             } catch (error) {
                 return {
                     code: 400,
@@ -398,6 +433,10 @@ export class S3Service {
                 }
             }
         }
+    }
+
+    async processSleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
     }
 }
  
