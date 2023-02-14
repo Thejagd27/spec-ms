@@ -51,7 +51,6 @@ describe('S3Service', () => {
         }
       ]
     }
-
     expect(await service.uploadFile(input)).toStrictEqual(result);
   });
 
