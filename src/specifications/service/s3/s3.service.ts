@@ -17,7 +17,7 @@ export class S3Service {
                 "scheduled_type": {
                     "type": "string",
                     "shouldnotnull": true,
-                    "enum": ["archive","error"]
+                    "enum": ["Archive","Error"]
                 }
 
             },
@@ -36,10 +36,10 @@ export class S3Service {
             }
         else {
             try {
-                let selectedBucket = scheduleExpr.scheduled_type == 'archive'? process.env.ARCHIVED_BUCKET:process.env.ERROR_BUCKET;
-                let selectedFolder = scheduleExpr.scheduled_type == 'archive'? "/archived_data":"/error_data";
+                let selectedBucket = scheduleExpr.scheduled_type == 'Archive'? process.env.ARCHIVED_BUCKET:process.env.ERROR_BUCKET;
+                let selectedFolder = scheduleExpr.scheduled_type == 'Archive'? "/archived_data":"/error_data";
                 let nifi_root_pg_id, pg_list, pg_source;
-                const processor_group_name = "uploadToS3";
+                const processor_group_name = `uploadTo${scheduleExpr.scheduled_type}S3`;
                 let data = {};
                 let res = await this.http.get(`${process.env.URL}/nifi-api/process-groups/root`);
                 nifi_root_pg_id = res.data['component']['id'];
