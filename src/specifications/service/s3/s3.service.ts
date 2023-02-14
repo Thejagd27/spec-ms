@@ -6,17 +6,24 @@ var cronValidator = require('cron-expression-validator');
 @Injectable()
 export class S3Service {
     constructor(private http: HttpCustomService, private specService: GenericFunction) {}
-    async uploadFile(scheduleExpr:s3DTO) {
+    async uploadFile(scheduleExpr) {
         const s3Schema = {
             "type": "object",
             "properties": {
                 "scheduled_at": {
                     "type": "string",
                     "shouldnotnull": true
+                },
+                "schedule_type": {
+                    "type": "string",
+                    "shouldnotnull": true,
+                    "enum": ["archive","error"]
                 }
+
             },
             "required": [
                 "scheduled_at",
+                "schedule_type"
             ],
         }
         let isValidSchema: any = await this.specService.ajvValidator(s3Schema, scheduleExpr);
@@ -28,7 +35,9 @@ export class S3Service {
                 return { code: 400, error: result.errorMessage }
             }
         else {
-            try { 
+            try {
+                let selectedBucket = scheduleExpr.scheduled_type == 'archive'? process.env.ARCHIVED_BUCKET:process.env.ERROR_BUCKET;
+                let selectedFolder = scheduleExpr.scheduled_type == 'archive'? "/archived_data":"/error_data";
                 let nifi_root_pg_id, pg_list, pg_source;
                 const processor_group_name = "uploadToS3";
                 let data = {};
@@ -51,8 +60,8 @@ export class S3Service {
                 await this.connect(GetFileID, PutS3ObjectID, success_relationship, pg_source['component']['id']);
                 await this.connect(PutS3ObjectID, successLogMessageID, success_relationship, pg_source['component']['id']);
                 await this.connect(PutS3ObjectID, failedLogMessageID, failure_relationship, pg_source['component']['id']);
-                await this.updateProcessorProperty(pg_source['component']['id'], 'PutS3Object');
-                await this.updateProcessorProperty(pg_source['component']['id'], 'GetFile', scheduleExpr.scheduled_at);
+                await this.updateProcessorProperty(pg_source['component']['id'], 'PutS3Object',scheduleExpr.scheduled_at,selectedBucket,selectedFolder);
+                await this.updateProcessorProperty(pg_source['component']['id'], 'GetFile', scheduleExpr.scheduled_at,selectedBucket, selectedFolder);
                 await this.updateProcessorProperty(pg_source['component']['id'], 'successLogMessage');
                 await this.updateProcessorProperty(pg_source['component']['id'], 'failedLogMessage');
                 data = {
@@ -257,7 +266,7 @@ export class S3Service {
 
     }
     
-    async updateProcessorProperty(pg_source_id, processor_name, scheduleExpr?: string) {
+    async updateProcessorProperty(pg_source_id, processor_name, scheduleExpr?: string, bucketName?: string,folderSelected?: string) {
         const pg_ports = await this.getProcessorGroupPorts(pg_source_id);
         if (pg_ports) {
             for (let processor of pg_ports['processGroupFlow']['flow']['processors']) {
@@ -280,7 +289,7 @@ export class S3Service {
                                     "comments": "",
                                     "autoTerminatedRelationships": [],
                                     "properties": {
-                                        "Input Directory": "/archived_data"
+                                        "Input Directory": folderSelected
                                     }
                                 },
                                 "state": "STOPPED"
@@ -357,7 +366,7 @@ export class S3Service {
                                     "properties": {
                                         "Access Key": process.env.AWS_ACCESS_KEY,
                                         "Secret Key": process.env.AWS_SECRET_KEY,
-                                        "Bucket": "cqube-v5.0-archived-data",
+                                        "Bucket": bucketName,
                                         "Region": "ap-south-1"
                                     }
                                 },
