@@ -535,15 +535,18 @@ paths:
               scheduled_at:
                 type: "string"
                 example: "0 0/2 * 1/1 * ? *"
+              scheduled_type:
+                type: "string"
+                example: "Archive"
       responses:
         200:
-          description: "uploadToS3 Processor group running successfully"
+          description: "uploadToArchiveS3 Processor group running successfully"
           schema:
             type: "object"
             properties:
               message:
                 type: "string"
-                example: "uploadToS3 Processor group running successfully"     
+                example: "uploadToArchiveS3 Processor group running successfully"     
         400:
           description: "Something went wrong"
           schema:
@@ -568,22 +571,20 @@ paths:
               pipeline_name:
                 type: "string"
                 example: "student_count_pipe"
-              schedule_type:
-                type: "string"
-                example: "dimension_to_db/ingest_to_aggregate/aggregate_to_dataset"
+             
               scheduled_at:
                 type: "string"
-                example: "12/12/2022 14:00:00"
+                example: "0 0/1 * 1/1 * ? *"
 
       responses:
         200:
-          description: "Schedule created Successfully"
+          description: "student_count_pipe schedule created successfully"
           schema:
             type: "object"
             properties:
               message:
                 type: "string"
-                example: "Schedule created Successfully"
+                example: "student_count_pipe has been successfully scheduled"
         400:
           description: "Something went wrong"
           schema:
