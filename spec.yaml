@@ -537,7 +537,7 @@ paths:
                 example: "0 0/2 * 1/1 * ? *"
               scheduled_type:
                 type: "string"
-                example: "Archive"
+                example: "Archive | Error"
       responses:
         200:
           description: "uploadToArchiveS3 Processor group running successfully"
