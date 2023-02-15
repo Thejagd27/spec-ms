@@ -36,7 +36,7 @@ describe('S3Service', () => {
 
   it('validation', async () => {
     let input = {
-      "schedule_type": "archive"
+      "scheduled_type": "Archive"
     }
     let result = {
       code: 400, error: [
@@ -51,14 +51,13 @@ describe('S3Service', () => {
         }
       ]
     }
-
     expect(await service.uploadFile(input)).toStrictEqual(result);
   });
 
   it('cron validation', async () => {
     let input = {
       "scheduled_at": "gsdg",//giving wrong expression
-      "schedule_type":"archive"
+      "scheduled_type":"Archive"
     }
     let result = {
       code: 400, error: "Unexpected end of expression"
@@ -142,10 +141,10 @@ describe('S3Service', () => {
     service = module.get<S3Service>(S3Service);
     let input = {
       "scheduled_at": "0 0/2 * 1/1 * ? *",
-      "schedule_type": "archive"
+      "scheduled_type": "Archive"
     }
     let result = {
-      code: 200, message: "uploadToS3 Processor group running successfully"
+      code: 200, message: "uploadToArchiveS3 Processor group running successfully"
     }
     expect(await service.uploadFile(input)).toStrictEqual(result);
   });
@@ -178,7 +177,7 @@ describe('S3Service', () => {
     service = module.get<S3Service>(S3Service);
     let input = {
       "scheduled_at": "0 0/2 * 1/1 * ? *",
-      "schedule_type":"archive"
+      "scheduled_type":"Archive"
     }
     let resultOutput = "Error: exception test";
 
