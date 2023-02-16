@@ -81,6 +81,32 @@ describe('TransformerService', () => {
         expect(await service.createTransformer(transformerData)).toStrictEqual(result);
     });
 
+
+    it('validation dataset', async () => {
+        const transformerData = {
+
+            "ingestion_name":"students_attendance",
+            "key_file": "transformer_dataset_maping.csv",
+            // "program": "SAC",
+            "operation": "dataset"
+        };
+        let result = {
+            "code": 400, error: [
+                {
+                    "instancePath": "",
+                    "schemaPath": "#/required",
+                    "keyword": "required",
+                    "params": {
+                        "missingProperty": "program"
+                    },
+                    "message": "must have required property 'program'"
+                }
+            ]
+        };
+
+        expect(await service.createTransformer(transformerData)).toStrictEqual(result);
+    });
+
     it('Invalid operation type', async () => {
         const transformerData = {
             "ingestion_name": "students_attendance",
