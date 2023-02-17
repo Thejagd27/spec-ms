@@ -515,7 +515,7 @@ paths:
           description: "Something went wrong"
           schema:
             $ref: "#/definitions/generic_error"
-
+            
   /spec/s3:
     post:
       tags:
