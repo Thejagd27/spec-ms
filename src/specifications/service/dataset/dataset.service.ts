@@ -12,7 +12,6 @@ export class DatasetService {
     }
 
     async createDataset(datasetDTO) {
-        const queryRunner = this.dataSource.createQueryRunner();
         let dbColumns = [];
         let newObj = this.specService.convertKeysToLowerCase(datasetDTO);
 
@@ -34,13 +33,14 @@ export class DatasetService {
                     return {"code": 400, "error": "Dataset name already exists"};
                 }
                 else {
-                    await queryRunner.connect();
                     let values = newObj?.input?.properties?.dataset?.properties?.items?.items?.properties;
                     let duplicacyQuery = checkDatasetDuplicacy(JSON.stringify(values));
                     const result: any = await this.dataSource.query(duplicacyQuery);
                     if (result?.length == 0) { //If there is no record in the DB then insert the first schema
-                        await queryRunner.startTransaction();
+                        const queryRunner = this.dataSource.createQueryRunner();
                         try {
+                            await queryRunner.connect();
+                            await queryRunner.startTransaction();
                             let insertQuery = insertSchema(['dataset_name', 'dataset_data'], 'dataset');
                             insertQuery = insertQuery.replace('$1', `'${datasetDTO.dataset_name}'`);
                             insertQuery = insertQuery.replace('$2', `'${JSON.stringify(newObj)}'`);
