@@ -12,7 +12,6 @@ export class TransformerService {
     }
 
     async createTransformer(inputData) {
-        const queryRunner: any = this.dataSource.createQueryRunner();
         try {
             const ingestionName = inputData.ingestion_name;
             const keyFileName = inputData?.key_file;
@@ -45,7 +44,6 @@ export class TransformerService {
                     return { "code": 400, error: isvalidSchema.errors }
                 } else {
                     if (queryResult?.length === 1) {
-                        await queryRunner.connect();
                         apiData = {
                             "ingestion_name": ingestionName,
                             "key_file": keyFileName,
@@ -54,10 +52,12 @@ export class TransformerService {
                         };
 
                         const apiGenerator: any = await this.generatorAPI(apiData);
+                        const queryRunner = this.dataSource.createQueryRunner();
 
                         if (apiGenerator.data.code === 200) {
-                            await queryRunner.startTransaction();
                             try {
+                                await queryRunner.connect();
+                                await queryRunner.startTransaction();
                                 let pidData = [];
                                 for (let generator of apiGenerator.data.TransformerFiles) {
                                     const transResult: any = await queryRunner.query(insertTransformer(generator.filename));
