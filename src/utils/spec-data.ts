@@ -252,6 +252,68 @@ export const transformerSchemaData = {
                 "pattern": "^.*\.(csv)$",
                 "shouldnotnull": true
             },
+            
+            "operation": {
+                "type": "string",
+                "shouldnotnull": true
+
+            },
+
+        },
+        "required": [
+            "ingestion_name",
+            "key_file",
+            "operation"
+        ]
+    }
+};
+
+export const transformerDimesnsionSchemaData = {
+    "ingestion_type": "transformer",
+    "input": {
+        "type": "object",
+        "shouldnotnull": true,
+        "properties": {
+            "ingestion_name": {
+                "type": "string",
+                "shouldnotnull": true
+            },
+            "key_file": {
+                "type": "string",
+                "pattern": "^.*\.(csv)$",
+                "shouldnotnull": true
+            },
+           
+            "operation": {
+                "type": "string",
+                "shouldnotnull": true
+
+            },
+
+        },
+        "required": [
+            "ingestion_name",
+            "key_file",
+            "operation"
+        ]
+    }
+};
+
+export const transDatasetformerSchemaData = {
+    "ingestion_type": "transformer",
+    "input": {
+        "type": "object",
+        "shouldnotnull": true,
+        "properties": {
+            "ingestion_name": {
+                "type": "string",
+                "shouldnotnull": true
+            },
+            "key_file": {
+                "type": "string",
+                "pattern": "^.*\.(csv)$",
+                "shouldnotnull": true
+            },
             "program": {
                 "type": "string",
                 "shouldnotnull": true
@@ -271,7 +333,6 @@ export const transformerSchemaData = {
         ]
     }
 };
-
 export const PipelineSchemaDimensiontoDB = {
     "type": "object",
     "properties": {
