@@ -27,7 +27,7 @@ export class ScheduleService {
                 return { code: 400, error: result.errorMessage }
             }
             else {
-                let queryResult = getPipelineSpec(scheduleData?.pipeline_name?.toLowerCase());
+                let queryResult = getPipelineSpec(scheduleData?.pipeline_name);
                 const resultPipeName = await this.dataSource.query(queryResult);
                 if (resultPipeName.length === 1) {
                     transformerName = resultPipeName[0]?.transformer_file;
