@@ -2,6 +2,9 @@ import {Injectable} from "@nestjs/common";
 import Ajv from "ajv";
 import Ajv2019 from "ajv/dist/2019";
 import addFormats from "ajv-formats"
+import * as fs from 'fs';
+import jsonObject from './pipeline-new/jsonObjects.json'
+
 const ajv = new Ajv2019();
 addFormats(ajv);
 ajv.addKeyword({
@@ -50,10 +53,10 @@ export class GenericFunction {
             else if (element?.type == "json") {
                 dbColumns[index] = 'jsonb';
             }
-            else if(element?.type === 'number') {
+            else if (element?.type === 'number') {
                 dbColumns[index] = 'NUMERIC';
             }
-            else if(element?.type === 'boolean') {
+            else if (element?.type === 'boolean') {
                 dbColumns[index] = 'BOOLEAN';
             }
             else if (element?.type == 'date') {
@@ -61,5 +64,23 @@ export class GenericFunction {
             }
         });
         return dbColumns;
+    }
+
+
+    replaceJsonValues(jsonObjName: any, replacements: any) {
+        let jsonObj;
+        for (let jsonRecord of jsonObject) {
+            if (jsonRecord.name === jsonObjName) {
+                jsonObj = jsonRecord.object;
+            }
+        }
+        let jsonString = JSON.stringify(jsonObj);
+        const keys = Object.keys(replacements);
+
+        keys.forEach(key => {
+            const regex = new RegExp(`\\#\\{${key}\\}`, 'g');
+            jsonString = jsonString.replace(regex, replacements[key]);
+        });
+        return JSON.parse(jsonString);
     }
 }

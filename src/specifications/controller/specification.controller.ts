@@ -2,23 +2,35 @@ import {EventService} from './../service/event/event.service';
 import {DimensionService} from './../service/dimension/dimension.service';
 import {Body, Controller, Get, Post, Res} from '@nestjs/common';
 import {Response} from 'express';
-import {pipelineDto, Result, specDataset,specTrasformer, specDimensionDTO,scheduleDto, specEventDTO, s3DTO} from '../dto/specData.dto';
+import {
+    pipelineDto,
+    Result,
+    specDataset,
+    specTrasformer,
+    specDimensionDTO,
+    scheduleDto,
+    specEventDTO,
+    s3DTO
+} from '../dto/specData.dto';
 import {TransformerService} from '../service/transformer/transformer.service';
 import {DatasetService} from '../service/dataset/dataset.service';
 import {PipelineService} from '../service/pipeline/pipeline.service';
-import { ScheduleService } from '../service/schedule/schedule.service';
-import { ApiTags } from '@nestjs/swagger';
-import { S3Service } from '../service/s3/s3.service';
+import {ScheduleService} from '../service/schedule/schedule.service';
+import {ApiTags} from '@nestjs/swagger';
+import {S3Service} from '../service/s3/s3.service';
+import {PipelineServiceNew} from '../service/pipeline-new/new-pipeline-service';
+
 @ApiTags('spec-ms')
 @Controller('spec')
 export class SpecificationController {
-    constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService, private pipelineService: PipelineService, private scheduleService: ScheduleService,private s3service:S3Service) {
+    constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService,
+                private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service,
+                private pipelineServiceNew: PipelineServiceNew) {
     }
 
     @Get('/hello')
-    async getHello()
-    {
-        return {"message":"Hello World"}
+    async getHello() {
+        return {"message": "Hello World"}
     }
 
     @Post('/dimension')
@@ -98,7 +110,6 @@ export class SpecificationController {
     async createPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
         try {
             const result: Result = await this.pipelineService.createSpecPipeline(pipelineDto)
-            console.log('result', result);
             if (result?.code == 400) {
                 response.status(400).send({"message": result.error});
             }
@@ -109,11 +120,11 @@ export class SpecificationController {
             console.error("create.Pipeline impl :", error)
         }
     }
+
     @Post('/schedule')
     async schedulePipeline(@Body() scheduleDto: scheduleDto, @Res()response: Response) {
         try {
             const result: Result = await this.scheduleService.schedulePipeline(scheduleDto)
-            console.log('result', result);
             if (result?.code == 400) {
                 response.status(400).send({"message": result.error});
             }
@@ -126,8 +137,7 @@ export class SpecificationController {
     }
 
     @Post('/s3')
-    async uploadToS3(@Body() scheduleTime:s3DTO,@Res()response: Response)
-    {
+    async uploadToS3(@Body() scheduleTime: s3DTO, @Res()response: Response) {
         try {
             let result: any = await this.s3service.uploadFile(scheduleTime);
             if (result.code == 400) {
@@ -139,6 +149,22 @@ export class SpecificationController {
         catch (e) {
             console.error('create-s3upload-impl: ', e.message);
             throw new Error(e);
+        }
+    }
+
+    @Post('/pipeline-new')
+    async createSpecPipelineNew(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+        try {
+            const result: any = await this.pipelineServiceNew.createSpecPipelineNew(pipelineDto);
+            console.log('result', result);
+            if (result?.code == 400) {
+                response.status(400).send({"message": result.error});
+            }
+            else {
+                response.status(200).send({"message": result.message});
+            }
+        } catch (error) {
+            console.error('createSpecPipelineNew: ', error);
         }
     }
 
