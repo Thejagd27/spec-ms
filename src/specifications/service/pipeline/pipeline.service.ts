@@ -121,9 +121,9 @@ export class PipelineService {
                 let nifi_root_pg_id, pg_list, pg_source;
                 const processor_group_name = pipelineName;
                 let data = {};
-                let res = await this.http.get(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`);
+                let res = await this.http.get(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`);
                 nifi_root_pg_id = res.data['component']['id'];
-                let resp = await this.http.get(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${nifi_root_pg_id}`)
+                let resp = await this.http.get(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${nifi_root_pg_id}`)
 
                 pg_list = resp.data;
                 let counter = 0;
@@ -138,7 +138,7 @@ export class PipelineService {
                             "disconnectedNodeAcknowledged": false
                         };
                         console.log('pipeline.service.: STOPPED');
-                        await this.http.put(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data,)
+                        await this.http.put(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data,)
                         break;
                     }
                 }
@@ -182,7 +182,7 @@ export class PipelineService {
                             "disconnectedNodeAcknowledged": false
                         };
                         console.log('pipeline.service.: RUNNING');
-                        await this.http.put(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data); 
+                        await this.http.put(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data); 
                     if(result.code == 400)
                     {
                         
@@ -214,7 +214,7 @@ export class PipelineService {
     }
 
     async addProcessorGroup(processor_group_name: string) {
-        let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`;
+        let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`;
         let result = await this.http.get(url);
         if (result) {
             const nifi_root_pg_id = result.data['component']['id'];
@@ -237,7 +237,7 @@ export class PipelineService {
                 }
             }
             try {
-                let processurl = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${nifi_root_pg_id}/process-groups`;
+                let processurl = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${nifi_root_pg_id}/process-groups`;
                 let processRes = await this.http.post(processurl, pg_details);
                 if (processRes) {
                     return processRes
@@ -254,7 +254,7 @@ export class PipelineService {
     }
 
     async addProcessor(processor_name, name, pg_source_id) {
-        let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source_id}`;
+        let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source_id}`;
         let result = await this.http.get(url);
         const pg_ports = result.data;
         const minRange = -250;
@@ -282,7 +282,7 @@ export class PipelineService {
             }
         };
         try {
-            let addProcessUrl = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${pg_ports['processGroupFlow']['id']}/processors`;
+            let addProcessUrl = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${pg_ports['processGroupFlow']['id']}/processors`;
             let addProcessResult = await this.http.post(addProcessUrl, processors);
             if (addProcessResult) {
                 return "Successfully created the processor";
@@ -310,7 +310,7 @@ export class PipelineService {
     }
 
     async getProcessorGroupPorts(pg_source_id) {
-        let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source_id}`
+        let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pg_source_id}`
         try {
             let res = await this.http.get(url);
             if (res.data) {
@@ -346,7 +346,7 @@ export class PipelineService {
                     "selectedRelationships": relationship
                 }
             };
-            let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${pg_ports['processGroupFlow']['id']}/connections`;
+            let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/${pg_ports['processGroupFlow']['id']}/connections`;
             try {
                 let result = await this.http.post(url, json_body);
                 if (result) {
@@ -365,9 +365,9 @@ export class PipelineService {
     {
         let pcName;
         let pg_details;
-        let res = await this.http.get(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`);
+        let res = await this.http.get(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/process-groups/root`);
         let nifi_root_pg_id = res.data['component']['id'];
-        let pg_list = await this.http.get(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${nifi_root_pg_id}`);
+        let pg_list = await this.http.get(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${nifi_root_pg_id}`);
         if(pg_list['status'] == 200)
         {
             for(let pg of pg_list['data']['processGroupFlow']['flow']['processGroups'])
@@ -381,7 +381,7 @@ export class PipelineService {
         else{
             return {code:400, error:"Failed to get the processor group list"}
         }
-        let result  = await this.http.get(`http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pcName['component']['id']}`);
+        let result  = await this.http.get(`${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/flow/process-groups/${pcName['component']['id']}`);
         pg_details = result;
         for(let details of pg_details['data']['processGroupFlow']['flow']['processors'])
         {
@@ -411,7 +411,7 @@ export class PipelineService {
                     },
                     "disconnectedNodeAcknowledged": false
                 }
-                let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/processors/${details?.component?.id}`;
+                let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/processors/${details?.component?.id}`;
                 let resultCode = await this.http.put(url,reqBody);
                 if(resultCode['status'] == 200)
                 {
@@ -548,7 +548,7 @@ export class PipelineService {
                             "disconnectedNodeAcknowledged": "False"
                         }
                     }
-                    let url = `http://${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/processors/${processor?.component?.id}`;
+                    let url = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}/nifi-api/processors/${processor?.component?.id}`;
 
                     try {
                         let result = await this.http.put(url, update_processor_property_body);
