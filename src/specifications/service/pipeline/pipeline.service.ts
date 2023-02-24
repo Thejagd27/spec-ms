@@ -176,7 +176,7 @@ export class PipelineService {
                 }
                 else {
                     let result = await this.updateScheduleProcessProperty(processor_group_name, 'generateFlowFile', schedulePeriod);
-                    await this.processSleep(5000);
+                    await this.processSleep(500);
                     data = {
                         "id": pg_source['component']['id'],
                         "state": "RUNNING",  // RUNNING or STOP
