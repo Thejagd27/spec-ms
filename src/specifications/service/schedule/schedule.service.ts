@@ -27,14 +27,14 @@ export class ScheduleService {
                 return { code: 400, error: result.errorMessage }
             }
             else {
-                let queryResult = getPipelineSpec(scheduleData?.pipeline_name?.toLowerCase());
+                let queryResult = getPipelineSpec(scheduleData?.pipeline_name.toLowerCase());
                 const resultPipeName = await this.dataSource.query(queryResult);
                 if (resultPipeName.length === 1) {
                     transformerName = resultPipeName[0]?.transformer_file;
                     await queryRunner.connect();
                     await queryRunner.startTransaction();
                     try {
-                        const result = await this.pipelineService.CreatePipeline(transformerName, scheduleData?.pipeline_name, scheduleData?.scheduled_at)
+                        const result = await this.pipelineService.CreatePipeline(transformerName, scheduleData?.pipeline_name.toLowerCase(), scheduleData?.scheduled_at)
                         if (result?.code === 200) {
                             let checkPipelinePid = checkRecordExists('pipeline_pid', 'schedule');
                             checkPipelinePid = checkPipelinePid.replace('$1', resultPipeName[0].pid);

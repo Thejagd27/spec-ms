@@ -10,7 +10,6 @@ export class DimensionService {
     }
 
     async createDimension(dimensionDTO) {
-        const queryRunner = this.dataSource.createQueryRunner();
         let dbColumns = [];
         let newObj = this.specService.convertKeysToLowerCase(dimensionDTO);
         const isValidSchema: any = await this.specService.ajvValidator(dimensionSchemaData, newObj);
@@ -31,14 +30,15 @@ export class DimensionService {
                     return {"code": 400, "error": "Dimension name already exists"};
                 }
                 else {
-                    await queryRunner.connect();
                     let values = newObj?.input?.properties?.dimension?.items?.properties;
                     let duplicacyQuery = checkDuplicacy(['dimension_name', 'dimension_data'], 'dimension', ['dimension_data', "'input'->'properties'->'dimension'->'items'->'properties'"], JSON.stringify(values));
                     const result = await this.dataSource.query(duplicacyQuery);
                     if (result?.length == 0) //If there is no record in the DB then insert the first schema
                     {
-                        await queryRunner.startTransaction();
+                        const queryRunner = this.dataSource.createQueryRunner();
                         try {
+                            await queryRunner.connect();
+                            await queryRunner.startTransaction();
                             let insertQuery = insertSchema(['dimension_name', 'dimension_data'], 'dimension');
                             insertQuery = insertQuery.replace('$1', `'${dimensionDTO.dimension_name.toLowerCase()}'`);
                             insertQuery = insertQuery.replace('$2', `'${JSON.stringify(newObj)}'`);

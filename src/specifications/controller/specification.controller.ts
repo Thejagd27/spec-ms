@@ -21,7 +21,7 @@ import {S3Service} from '../service/s3/s3.service';
 import {PipelineServiceNew} from '../service/pipeline-new/new-pipeline-service';
 
 @ApiTags('spec-ms')
-@Controller('spec')
+@Controller('')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService,
                 private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service,

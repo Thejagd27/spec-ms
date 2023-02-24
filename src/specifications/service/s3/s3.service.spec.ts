@@ -221,4 +221,173 @@ describe('S3Service', () => {
     }
   });
 
+  it('Update processor property if processor group exists',async ()=>{
+    const mockTransaction = {
+      get: jest.fn().mockReturnValueOnce({ data: { component: { id: 1 } } })
+        .mockReturnValueOnce({
+          data: {
+            processGroupFlow: {
+              flow: {
+                processGroups: [{
+                  component: {
+                    id: 123,
+                    name: "uploadToArchiveS3"
+                  }
+                }]
+              }
+            }
+          }
+        })
+        .mockReturnValue({
+          data: {
+            processGroupFlow: {
+              id: 1,
+              flow: {
+                processors: [{
+                  component: {
+                    name: "GetFile", id: 1
+                  },
+                  revision: {
+                    version: 1.1
+                  }
+                }, {
+                  component: { name: "PutS3Object", id: 2 },
+                  revision: {
+                    version: 1.1
+                  }
+                },
+                ]
+              }
+            }
+          }
+        }),
+      post: jest.fn().mockReturnValueOnce({ data: { component: { id: 2 } } }),
+      put: jest.fn()
+    };
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [S3Service, HttpCustomService, GenericFunction,
+        {
+          provide: S3Service,
+          useClass: S3Service
+        },
+        {
+          provide: GenericFunction,
+          useClass: GenericFunction
+        },
+        {
+          provide: HttpCustomService,
+          useValue: mockTransaction
+        },
+      ]
+    }).compile();
+    jest.setTimeout(9000);
+    service = module.get<S3Service>(S3Service);
+    let input = {
+      "scheduled_at": "0 0/2 * 1/1 * ? *",
+      "scheduled_type": "Archive"
+    }
+    let result = {
+      code: 200, message: "uploadToArchiveS3 Processor group running successfully"
+    }
+    expect(await service.uploadFile(input)).toStrictEqual(result);
+  },7000);
+  
+  it('Something went wrong', async () => {
+    const mockTransaction = {
+      get: jest.fn().mockReturnValueOnce({ data: { component: { id: 1 } } }).mockImplementation(() => {
+        throw Error("exception test")
+    }),
+        
+      post: jest.fn().mockReturnValueOnce({ data: { component: { id: 2 } } }),
+      put: jest.fn()
+    };
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [S3Service, HttpCustomService, GenericFunction,
+        {
+          provide: S3Service,
+          useClass: S3Service
+        },
+        {
+          provide: GenericFunction,
+          useClass: GenericFunction
+        },
+        {
+          provide: HttpCustomService,
+          useValue: mockTransaction
+        },
+      ]
+    }).compile();
+
+    service = module.get<S3Service>(S3Service);
+    let input = {
+      "scheduled_at": "0 0/2 * 1/1 * ? *",
+      "scheduled_type": "Archive"
+    }
+    let result = {
+      code: 400, error:"Something went wrong"
+    }
+    expect(await service.uploadFile(input)).toStrictEqual(result);
+  },7000);
+
+  it('could not get Processor group port', async () => {
+
+    const mockTransaction = {
+      get: jest.fn()
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [S3Service, HttpCustomService, GenericFunction,
+        {
+          provide: S3Service,
+          useClass: S3Service
+        },
+        {
+          provide: GenericFunction,
+          useClass: GenericFunction
+        },
+        {
+          provide: HttpCustomService,
+          useValue: mockTransaction
+        },
+      ]
+    }).compile();
+
+    service = module.get<S3Service>(S3Service);
+    let resultOutput = "could not get Processor group port";
+
+    try {
+      await service.getProcessorGroupPorts("123adfgg");
+    } catch (e) {
+      expect(e.message).toEqual(resultOutput);
+    }
+  });
+
+ it("Successfully created the processor", async()=>{
+  const mockTransaction = {
+    get: jest.fn().mockReturnValueOnce({addProcessResult:2})
+  };
+  const module: TestingModule = await Test.createTestingModule({
+    providers: [S3Service, HttpCustomService, GenericFunction,
+      {
+        provide: S3Service,
+        useClass: S3Service
+      },
+      {
+        provide: GenericFunction,
+        useClass: GenericFunction
+      },
+      {
+        provide: HttpCustomService,
+        useValue: mockTransaction
+      },
+    ]
+  }).compile();
+  service = module.get<S3Service>(S3Service);
+  let resultOutput = "Successfully created the processor";
+  try {
+    await service.addProcessor('org.apache.nifi.processors.standard.GetFile', 'GetFile','affgghh23');
+  } catch (e) {
+    expect(e.message).toEqual(resultOutput);
+  }
+ })
 });

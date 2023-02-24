@@ -12,9 +12,7 @@ export class EventService {
     }
 
     async createEvent(eventDTO) {
-        const queryRunner :any = this.dataSource.createQueryRunner();
         let newObj = this.specService.convertKeysToLowerCase(eventDTO);
-
         const isValidSchema: any = await this.specService.ajvValidator(eventSchemaData, newObj);
         if (isValidSchema.errors) {
             return {"code": 400, error: isValidSchema.errors}
@@ -33,13 +31,14 @@ export class EventService {
                     return {"code": 400, "error": "Event name already exists"};
                 }
                 else {
-                    await queryRunner.connect();
                     let values = newObj?.input?.properties?.event?.items?.properties;
                     let duplicacyQuery = checkDuplicacy(['event_name', 'event_data'], 'event', ['event_data', "'input'->'properties'->'event'->'items'->'properties'"], JSON.stringify(values));
                     const result:any = await this.dataSource.query(duplicacyQuery);
                     if (result?.length == 0) { //If there is no record in the DB then insert the first schema
-                        await queryRunner.startTransaction();                       
+                        const queryRunner = this.dataSource.createQueryRunner();
                         try {
+                            await queryRunner.connect();
+                            await queryRunner.startTransaction();                       
                             let insertQuery = insertSchema(['event_name', 'event_data'], 'event');
                             insertQuery = insertQuery.replace('$1', `'${eventDTO.event_name.toLowerCase()}'`);
                             insertQuery = insertQuery.replace('$2', `'${JSON.stringify(newObj)}'`);
