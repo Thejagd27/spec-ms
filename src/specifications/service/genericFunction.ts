@@ -3,7 +3,7 @@ import Ajv from "ajv";
 import Ajv2019 from "ajv/dist/2019";
 import addFormats from "ajv-formats"
 import * as fs from 'fs';
-import jsonObject from './pipeline-new/jsonObjects.json'
+import {jsonObject} from './pipeline-new/jsonObjects'
 
 const ajv = new Ajv2019();
 addFormats(ajv);
