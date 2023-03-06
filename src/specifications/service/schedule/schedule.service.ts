@@ -5,8 +5,8 @@ import {  checkRecordExists, getPipelineSpec, insertIntoSchedule, updateSchedule
 import { scheduleSchema } from '../../../utils/spec-data';
 import { DataSource } from 'typeorm';
 import { GenericFunction } from '../genericFunction';
-import { PipelineService } from '../pipeline/pipeline.service'
 var cronValidator = require('cron-expression-validator');
+import { PipelineService } from '../pipeline/pipeline.service';
 
 @Injectable()
 export class ScheduleService {
@@ -66,15 +66,12 @@ export class ScheduleService {
                             await queryRunner.rollbackTransaction();
                             return { code: 400, error: `Could not create schedule for ${scheduleData.pipeline_name}` }
                         }
-
                     } catch (error) {
                         await queryRunner.rollbackTransaction();
                         return { code: 400, error: "Something went wrong" }
                     } finally {
                         await queryRunner.release();
                     }
-
-
                 }
                 else {
                     return { code: 400, error: "Pipeline name not Found" }

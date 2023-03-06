@@ -78,16 +78,18 @@ export const jsonObject: any = [
                     "bulletinLevel": "WARN",
                     "schedulingStrategy": "CRON_DRIVEN",
                     "comments": "",
-                    "runDurationMillis": 0,
-                    "autoTerminatedRelationships": []
+                    "autoTerminatedRelationships": [],
+                    "properties": {
+                        "Input Directory": "/input_data"
+                    }
                 },
                 "state": "STOPPED"
             },
             "revision": {
                 "clientId": "",
-                "version": "#{version}",
-                "disconnectedNodeAcknowledged": false
-            }
+                "version": "#{version}"
+            },
+            "disconnectedNodeAcknowledged": false
         }
     },
     {
@@ -319,10 +321,10 @@ export const jsonObject: any = [
                 "name": "#{componentName}",
                 "config": {
                     "properties": {
-                        "file_name": "${file_name}",
+                        "file_name": "${filename}",
                         "ingestion_name": "${event_name}",
                         "ingestion_type": "#{ingestionType}",
-                        "status": "completed_#{pipelineName}"
+                        "status": "Completed_#{pipelineName}"
                     }
                 },
                 "state": "STOPPED"
@@ -345,7 +347,8 @@ export const jsonObject: any = [
                         "failure"
                     ],
                     "properties": {
-                        "Attributes List": "file_name, ingestion_name, ingestion_type, status"
+                        "Attributes List": "file_name, ingestion_name, ingestion_type, status",
+                        "Destination": "flowfile-content"
                     }
                 },
                 "state": "STOPPED"
