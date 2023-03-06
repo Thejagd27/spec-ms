@@ -18,14 +18,12 @@ import {PipelineService} from '../service/pipeline/pipeline.service';
 import {ScheduleService} from '../service/schedule/schedule.service';
 import {ApiTags} from '@nestjs/swagger';
 import {S3Service} from '../service/s3/s3.service';
-import {PipelineServiceNew} from '../service/pipeline-new/new-pipeline-service';
 
 @ApiTags('spec-ms')
 @Controller('')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService,
-                private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service,
-                private pipelineServiceNew: PipelineServiceNew) {
+                private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service) {
     }
 
     @Get('/hello')
@@ -106,20 +104,20 @@ export class SpecificationController {
         }
     }
 
-    @Post('/pipeline')
-    async createPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
-        try {
-            const result: Result = await this.pipelineService.createSpecPipeline(pipelineDto)
-            if (result?.code == 400) {
-                response.status(400).send({"message": result.error});
-            }
-            else {
-                response.status(200).send({"message": result.message});
-            }
-        } catch (error) {
-            console.error("create.Pipeline impl :", error)
-        }
-    }
+    // @Post('/pipeline')
+    // async createPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+    //     try {
+    //         const result: Result = await this.pipelineService.createSpecPipeline(pipelineDto)
+    //         if (result?.code == 400) {
+    //             response.status(400).send({"message": result.error});
+    //         }
+    //         else {
+    //             response.status(200).send({"message": result.message});
+    //         }
+    //     } catch (error) {
+    //         console.error("create.Pipeline impl :", error)
+    //     }
+    // }
 
     @Post('/schedule')
     async schedulePipeline(@Body() scheduleDto: scheduleDto, @Res()response: Response) {
@@ -152,10 +150,10 @@ export class SpecificationController {
         }
     }
 
-    @Post('/pipeline-new')
-    async createSpecPipelineNew(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+    @Post('/pipeline')
+    async createSpecPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
         try {
-            const result: any = await this.pipelineServiceNew.createSpecPipelineNew(pipelineDto);
+            const result: any = await this.pipelineService.createSpecPipeline(pipelineDto);
             console.log('result', result);
             if (result?.code == 400) {
                 response.status(400).send({"message": result.error});

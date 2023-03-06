@@ -1,4 +1,4 @@
-import {PipelineService} from './../service/pipeline/pipeline.service';
+import {PipelineService} from '../service/pipeline/pipeline.service';
 import {Test, TestingModule} from '@nestjs/testing';
 import {DatasetService} from '../service/dataset/dataset.service';
 import {DimensionService} from '../service/dimension/dimension.service';
@@ -7,7 +7,6 @@ import {TransformerService} from '../service/transformer/transformer.service';
 import {SpecificationController} from './specification.controller';
 import {ScheduleService} from '../service/schedule/schedule.service';
 import {S3Service} from '../service/s3/s3.service';
-import {PipelineServiceNew} from "../service/pipeline-new/new-pipeline-service";
 
 describe('SpecificationController', () => {
     let controller: SpecificationController;
@@ -15,7 +14,7 @@ describe('SpecificationController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [SpecificationController],
-            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService, S3Service, PipelineServiceNew,
+            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService, S3Service,
                 {
                     provide: DimensionService,
                     useValue: {
@@ -68,13 +67,6 @@ describe('SpecificationController', () => {
                     provide: S3Service,
                     useValue: {
                         uploadFile: jest.fn()
-                    }
-                }, {
-                    provide: PipelineServiceNew,
-                    useValue: {
-                        createSpecPipelineNew: jest.fn(dto => {
-                            dto
-                        })
                     }
                 },
             ]
