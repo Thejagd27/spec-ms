@@ -24,7 +24,8 @@ export enum ProcessorGroupRelationEnum {
     PYTHON_SUCCESS = 'output stream',
     AUTO_TERMINATE = 'success',
     EVENT_NAME = 'event_name',
-    UNMATCHED = 'unmatched'
+    UNMATCHED = 'unmatched',
+    PARSE_EVENT_INPUT = 'parse_event_input'
 }
 
 export const portObjList: PortGroup[] = [
@@ -87,19 +88,16 @@ export const processorObjList: ProcessorGroup[] = [
         processorName: 'addingJsonAttribute',
         id: null,
         componentName: 'org.apache.nifi.processors.attributes.UpdateAttribute'
+    },
+    {
+        processorName: 'routeOnAttribute',
+        id: null,
+        componentName: 'org.apache.nifi.processors.standard.RouteOnAttribute'
     }
 
 ];
 
 export const connectionList: ConnectionGroup[] = [
-    {
-        source: 'receivedPortInput',
-        sourceType: 'INPUT_PORT',
-        destination: 'pythonCode',
-        destinationType: 'PROCESSOR',
-        relationship: [],
-        function: 'portConnect'
-    },
     {
         source: 'pythonCode',
         sourceType: 'PROCESSOR',
@@ -171,5 +169,21 @@ export const connectionList: ConnectionGroup[] = [
         destinationType: 'PROCESSOR',
         relationship: [ProcessorGroupRelationEnum.SUCCESS],
         function: 'connect'
+    },
+    {
+        source: 'routeOnAttribute',
+        sourceType: 'PROCESSOR',
+        destination: 'pythonCode',
+        destinationType: 'PROCESSOR',
+        relationship: [ProcessorGroupRelationEnum.PARSE_EVENT_INPUT],
+        function: 'connect'
+    },
+    {
+        source: 'receivedPortInput',
+        sourceType: 'INPUT_PORT',
+        destination: 'routeOnAttribute',
+        destinationType: 'PROCESSOR',
+        relationship: [],
+        function: 'portConnect'
     }
 ];

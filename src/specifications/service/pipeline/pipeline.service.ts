@@ -446,6 +446,10 @@ export class PipelineService {
             case 'attributesToJson':
                 updateProcessorPropertyBody = this.specService.replaceJsonValues('attributesToJson', replacements);
                 break;
+            case 'routeOnAttribute':
+                replacements.input_filename = this.eventName;
+                updateProcessorPropertyBody = this.specService.replaceJsonValues('routeOnAttribute', replacements);
+                break;
         }
         return updateProcessorPropertyBody
     }

@@ -359,5 +359,29 @@ export const jsonObject: any = [
             },
             "disconnectedNodeAcknowledged": false
         }
+    },
+    {
+        "name": 'routeOnAttribute',
+        "object": {
+            "component": {
+                "id": "#{componentId}",
+                "name": "#{componentName}",
+                "config": {
+
+                    "autoTerminatedRelationships": [
+                        "unmatched"
+                    ],
+                    "properties": {
+                        "parse_event_input": "${filename:startsWith('#{input_filename}')}"
+                    }
+                },
+                "state": "STOPPED"
+            },
+            "revision": {
+                "clientId": "",
+                "version": "#{version}"
+            },
+            "disconnectedNodeAcknowledged": false
+        }
     }
 ];
