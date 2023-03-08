@@ -588,6 +588,9 @@ export class PipelineService {
             let receiveJsonApiInputId = await this.getInputPortId('update_api_status', 'receive_json_api_input');
             let fileMovingPgId = await this.getProcessorGroupPortsByName('File_moving');
             let updateApiStatusId = await this.getProcessorGroupPortsByName('update_api_status');
+            let restartPg=[];
+            restartPg.push(fileMovingPgId['data']['processGroupFlow']['id']);
+            restartPg.push(updateApiStatusId['data']['processGroupFlow']['id']);
 
             replacements = {
                 sourceId: passEventNameOutputId,
@@ -627,6 +630,16 @@ export class PipelineService {
             portConnect = this.specService.replaceJsonValues('portConnect', replacements);
             url = `${this.nifiUrl}/nifi-api/process-groups/${this.nifi_root_pg_id}/connections`;
             result = await this.http.post(url, portConnect);
+            
+            let data;
+            for(let restartId of restartPg){
+                data = {
+                    "id": restartId,
+                    "state": "RUNNING",  // RUNNING or STOP
+                    "disconnectedNodeAcknowledged": false
+                };
+                await this.http.put(`${this.nifiUrl}/nifi-api/flow/process-groups/${restartId}`, data);
+            }
         }
 
         try {
