@@ -1012,15 +1012,10 @@ export const schemaPipeline = {
         "pipeline_name": {
             "type": "string",
             "shouldnotnull": true
-        },
-        "pipeline_type": {
-            "type": "string",
-            "enum": ["ingest_to_db", "dimension_to_db", "dataset_to_db"],
-            "shouldnotnull": true
         }
+        
     },
     "required": [
-        "pipeline_name",
-        "pipeline_type",
+        "pipeline_name"
     ],
 }

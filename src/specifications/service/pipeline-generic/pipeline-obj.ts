@@ -20,8 +20,8 @@ export interface PortGroup {
 
 export enum ProcessorGroupRelationEnum {
     SUCCESS = 'success',
-    PYTHON_FAILURE = 'nonzero status',
-    PYTHON_SUCCESS = 'output stream',
+    BASH_FAILURE = 'nonzero status',
+    BASH_SUCCESS = 'output stream',
     AUTO_TERMINATE = 'success',
     EVENT_NAME = 'event_name',
     UNMATCHED = 'unmatched',
@@ -45,7 +45,7 @@ export const portObjList: PortGroup[] = [
 
 export const processorObjList: ProcessorGroup[] = [
     {
-        processorName: 'pythonCode',
+        processorName: 'bashScriptCode',
         id: null,
         componentName: 'org.apache.nifi.processors.standard.ExecuteStreamCommand'
     },
@@ -99,19 +99,19 @@ export const processorObjList: ProcessorGroup[] = [
 
 export const connectionList: ConnectionGroup[] = [
     {
-        source: 'pythonCode',
+        source: 'bashScriptCode',
         sourceType: 'PROCESSOR',
         destination: 'successLogMessage',
         destinationType: 'PROCESSOR',
-        relationship: [ProcessorGroupRelationEnum.PYTHON_SUCCESS],
+        relationship: [ProcessorGroupRelationEnum.BASH_SUCCESS],
         function: 'connect'
     },
     {
-        source: 'pythonCode',
+        source: 'bashScriptCode',
         sourceType: 'PROCESSOR',
         destination: 'failedLogMessage',
         destinationType: 'PROCESSOR',
-        relationship: [ProcessorGroupRelationEnum.PYTHON_FAILURE],
+        relationship: [ProcessorGroupRelationEnum.BASH_FAILURE],
         function: 'connect'
     },
     {
@@ -173,7 +173,7 @@ export const connectionList: ConnectionGroup[] = [
     {
         source: 'routeOnAttribute',
         sourceType: 'PROCESSOR',
-        destination: 'pythonCode',
+        destination: 'bashScriptCode',
         destinationType: 'PROCESSOR',
         relationship: [ProcessorGroupRelationEnum.PARSE_EVENT_INPUT],
         function: 'connect'

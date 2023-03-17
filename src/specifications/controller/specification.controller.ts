@@ -1,3 +1,4 @@
+import { PipelineGenericService } from './../service/pipeline-generic/piepline-generic.service';
 import {EventService} from './../service/event/event.service';
 import {DimensionService} from './../service/dimension/dimension.service';
 import {Body, Controller, Get, Post, Res} from '@nestjs/common';
@@ -14,16 +15,16 @@ import {
 } from '../dto/specData.dto';
 import {TransformerService} from '../service/transformer/transformer.service';
 import {DatasetService} from '../service/dataset/dataset.service';
-import {PipelineService} from '../service/pipeline/pipeline.service';
 import {ScheduleService} from '../service/schedule/schedule.service';
 import {ApiTags} from '@nestjs/swagger';
 import {S3Service} from '../service/s3/s3.service';
+import { PipelineService } from '../service/pipeline-old/pipeline.service';
 
 @ApiTags('spec-ms')
-@Controller('')
+@Controller('/spec')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private transformerservice: TransformerService, private datasetService: DatasetService,
-                private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service) {
+                private pipelineService: PipelineService, private scheduleService: ScheduleService, private s3service: S3Service, private pipelineGeneric:PipelineGenericService) {
     }
 
     @Get('/hello')
@@ -104,20 +105,34 @@ export class SpecificationController {
         }
     }
 
-    // @Post('/pipeline')
-    // async createPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
-    //     try {
-    //         const result: Result = await this.pipelineService.createSpecPipeline(pipelineDto)
-    //         if (result?.code == 400) {
-    //             response.status(400).send({"message": result.error});
-    //         }
-    //         else {
-    //             response.status(200).send({"message": result.message});
-    //         }
-    //     } catch (error) {
-    //         console.error("create.Pipeline impl :", error)
-    //     }
-    // }
+    @Post('/pipeline-old')
+    async createPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+        try {
+            const result: Result = await this.pipelineService.createSpecPipeline(pipelineDto)
+            if (result?.code == 400) {
+                response.status(400).send({"message": result.error});
+            }
+            else {
+                response.status(200).send({"message": result.message});
+            }
+        } catch (error) {
+            console.error("create.Pipeline impl :", error)
+        }
+    }
+    @Post('/pipeline')
+    async createPipelineSpec(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+        try {
+            const result: Result = await this.pipelineGeneric.createSpecPipeline(pipelineDto)
+            if (result?.code == 400) {
+                response.status(400).send({"message": result.error});
+            }
+            else {
+                response.status(200).send({"message": result.message});
+            }
+        } catch (error) {
+            console.error("create.Pipeline impl :", error)
+        }
+    }
 
     @Post('/schedule')
     async schedulePipeline(@Body() scheduleDto: scheduleDto, @Res()response: Response) {
@@ -150,20 +165,6 @@ export class SpecificationController {
         }
     }
 
-    @Post('/pipeline')
-    async createSpecPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
-        try {
-            const result: any = await this.pipelineService.createSpecPipeline(pipelineDto);
-            console.log('result', result);
-            if (result?.code == 400) {
-                response.status(400).send({"message": result.error});
-            }
-            else {
-                response.status(200).send({"message": result.message});
-            }
-        } catch (error) {
-            console.error('createSpecPipelineNew: ', error);
-        }
-    }
+    
 
 }

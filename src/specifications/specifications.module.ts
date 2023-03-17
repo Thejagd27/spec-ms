@@ -9,14 +9,15 @@ import { GenericFunction } from './service/genericFunction';
 import { TransformerService } from './service/transformer/transformer.service';
 import { DatasetService } from './service/dataset/dataset.service';
 import { HttpModule } from '@nestjs/axios';
-import { PipelineService } from './service/pipeline/pipeline.service';
+import { PipelineService } from '../specifications/service/pipeline-old/pipeline.service';
 import { ScheduleService } from './service/schedule/schedule.service';
 import { S3Service } from './service/s3/s3.service';
+import { PipelineGenericService } from './service/pipeline-generic/piepline-generic.service';
 
 @Module({
   imports: [HttpModule],
   controllers: [SpecificationController],
-  providers:[DimensionService,EventService,GenericFunction,TransformerService, DatasetService, PipelineService, HttpCustomService, ScheduleService,S3Service],
+  providers:[DimensionService,EventService,GenericFunction,TransformerService, DatasetService, PipelineService, PipelineGenericService,HttpCustomService, ScheduleService,S3Service],
 
 })
 export class SpecificationsModule {}
