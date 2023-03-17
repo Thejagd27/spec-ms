@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import Ajv2019 from "ajv/dist/2019";
 import addFormats from "ajv-formats";
-import {jsonObject} from './pipeline/jsonObjects'
+import { jsonObject } from "./pipeline-generic/jsonObjects";
 
 const ajv = new Ajv2019();
 addFormats(ajv);

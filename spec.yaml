@@ -537,7 +537,7 @@ paths:
                 example: "0 0/2 * 1/1 * ? *"
               scheduled_type:
                 type: "string"
-                example: "Archive | Error"
+                example: "Archive"
       responses:
         200:
           description: "uploadToArchiveS3 Processor group running successfully"
@@ -546,12 +546,12 @@ paths:
             properties:
               message:
                 type: "string"
-                example: "uploadToArchiveS3 Processor group running successfully"
+                example: "uploadToArchiveS3 Processor group running successfully"     
         400:
           description: "Something went wrong"
           schema:
             $ref: "#/definitions/generic_error"
-
+            
   /spec/schedule:
     post:
       tags:
@@ -571,6 +571,7 @@ paths:
               pipeline_name:
                 type: "string"
                 example: "student_count_pipe"
+             
               scheduled_at:
                 type: "string"
                 example: "0 0/1 * 1/1 * ? *"
@@ -588,6 +589,58 @@ paths:
           description: "Something went wrong"
           schema:
             $ref: "#/definitions/generic_error"
+  /spec/grammar:
+    get:
+      tags:
+        - "spec"
+      summary: ""
+      description: "Create a schedule"
+      operationId: "Get spec"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "grammar_type"
+          type: string
+          required: true
+        - in: "query"
+          name: "grammar_name"
+          type: string
+          required: true
+        
+          
+     
+
+      responses:
+        200:
+          description: "Grammar"
+          schema:
+            type: object
+            example:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date
+                    unique: true
+                  school_id:
+                    type: string
+                    unique: true
+                  students_attendance_marked:
+                    type: integer
+                    unique: true
+            
+
+          
+            
+    
+               
+        400:
+          description: "No records found"
+          schema:
+            $ref: "#/definitions/generic_error"
+
 
   /ingestion/event:
     post:
@@ -643,12 +696,6 @@ paths:
               message:
                 type: "string"
                 example: "Event Added Successfully"
-              invalid_record_count:
-                type: "integer"
-                example: 0
-              valid_record_count:
-                type: "integer"
-                example: 1
         400:
           description: "Something went wrong"
           schema:
@@ -725,12 +772,6 @@ paths:
               message:
                 type: "string"
                 example: "Dimension Added Successfully"
-              invalid_record_count:
-                type: "integer"
-                example: 0
-              valid_record_count:
-                type: "integer"
-                example: 1
         400:
           description: "Something went wrong"
           schema:
@@ -789,12 +830,6 @@ paths:
               message:
                 type: "string"
                 example: "Dataset Added Successfully"
-              invalid_record_count:
-                type: "integer"
-                example: 0
-              valid_record_count:
-                type: "integer"
-                example: 1
         400:
           description: "Something went wrong"
           schema:
@@ -831,7 +866,7 @@ paths:
           description: "Something went wrong"
           schema:
             $ref: "#/definitions/generic_error"
-  /ingestion/csv:
+  /ingestion/new_programs:
     post:
       tags:
         - "ingestion"
@@ -901,14 +936,14 @@ paths:
                 type: "array"
                 items:
                   type: "object"
-                  properties:
-                    file_status:
+                  properties: 
+                    file_status: 
                       type: "string"
                       example: uploaded
-                    pid:
+                    pid: 
                       type: "string"
                       example: 1
-                    created_at:
+                    created_at: 
                       type: "string"
                       example: "2023-01-27 18:18:08.007215"
         400:
@@ -954,6 +989,64 @@ paths:
               ready_to_archive:
                 type: "boolean"
                 example: true
+        400:
+          description: "Something went wrong"
+          schema:
+            $ref: "#/definitions/generic_error"
+  /ingestion/national_programs:
+    post:
+      tags:
+        - "ingestion"
+      summary: "CSV emission"
+      description: "CSV emission"
+      operationId: "emission"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "formData"
+          name: "body"
+          type: file
+          required: true
+       
+
+      responses:
+        200:
+          description: "File uploaded successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                example: "File uploaded successfully"
+        400:
+          description: "Something went wrong"
+          schema:
+            $ref: "#/definitions/generic_error"
+  /ingestion/v4-data-emission:
+    get:
+      tags:
+        - "ingestion"
+      summary: "V4 data emission"
+      description: "V4 data emission"
+      operationId: "V4emission"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+     
+       
+
+      responses:
+        200:
+          description: "Files uploaded successfully"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+                example: "Files uploaded successfully"
         400:
           description: "Something went wrong"
           schema:
