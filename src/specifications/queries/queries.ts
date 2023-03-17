@@ -3,6 +3,11 @@ export function checkName(coulmnName: string, tableName: string) {
     return querStr
 }
 
+export function checkPipelineName(coulmnName: string, tableName: string){
+    const querStr = `SELECT ${coulmnName}, pid FROM transformers.${tableName} WHERE ${coulmnName} = '$1'`;
+    return querStr 
+}
+
 export function checkDuplicacy(columnNames: string[], tableName: string, JsonProperties: string[], conditionData) {
     const querStr = `SELECT ${columnNames[0]},${columnNames[1]} FROM spec.${tableName} WHERE (${JsonProperties[0]}->${JsonProperties[1]}) ::jsonb = ('${conditionData}') ::jsonb `;
     return querStr;
@@ -91,22 +96,9 @@ export function getPipelineSpec(pipelineName: string) {
 }
 
 
-export function insertIntoSpecPipeline(pipeline_name?: string, pipeline_type?: string, dataset_name?: string, dimension_name?: string, event_name?: string, transformer_name?: string) {
-    const queryStr = `INSERT INTO spec.pipeline (event_pid, dataset_pid, dimension_pid, transformer_pid, pipeline_name, pipeline_type)
-    VALUES ((SELECT pid
-             FROM spec.event
-             WHERE event_name = '${event_name}'),
-            (SELECT pid
-             FROM spec.dataset
-             WHERE dataset_name = '${dataset_name}'),
-            (SELECT pid
-             FROM spec.dimension
-             WHERE dimension_name = '${dimension_name}'),
-            (SELECT pid
-             FROM spec.transformer
-             WHERE transformer_file = '${transformer_name}'),
-            '${pipeline_name}',
-            '${pipeline_type}'
+export function insertIntoSpecPipeline(pipeline_name?: string) {
+    const queryStr = `INSERT INTO transformers.pipeline (pipeline_name)
+    VALUES ('${pipeline_name}'
     ) RETURNING *`;
     return queryStr
 }
@@ -130,6 +122,8 @@ export function getGrammar(tableName, grammarName) {
     const querStr = `SELECT schema FROM spec."${tableName}" WHERE cname = $1`;
     return {query: querStr, values: [grammarName]};
 }
+
+
 
 
 

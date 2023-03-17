@@ -1,4 +1,5 @@
-import {PipelineService} from '../service/pipeline/pipeline.service';
+import { PipelineGenericService } from './../service/pipeline-generic/piepline-generic.service';
+import {PipelineService} from '../service/pipeline-old/pipeline.service';
 import {Test, TestingModule} from '@nestjs/testing';
 import {DatasetService} from '../service/dataset/dataset.service';
 import {DimensionService} from '../service/dimension/dimension.service';
@@ -15,7 +16,7 @@ describe('SpecificationController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [SpecificationController],
-            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService, S3Service, Grammar,
+            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService,PipelineGenericService, S3Service, Grammar,
                 {
                     provide: DimensionService,
                     useValue: {
