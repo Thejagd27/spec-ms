@@ -7,6 +7,7 @@ import {TransformerService} from '../service/transformer/transformer.service';
 import {SpecificationController} from './specification.controller';
 import {ScheduleService} from '../service/schedule/schedule.service';
 import {S3Service} from '../service/s3/s3.service';
+import {Grammar} from "../service/grammar/grammar.service";
 
 describe('SpecificationController', () => {
     let controller: SpecificationController;
@@ -14,7 +15,7 @@ describe('SpecificationController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [SpecificationController],
-            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService, S3Service,
+            providers: [DimensionService, EventService, TransformerService, DatasetService, PipelineService, ScheduleService, S3Service, Grammar,
                 {
                     provide: DimensionService,
                     useValue: {
@@ -69,6 +70,12 @@ describe('SpecificationController', () => {
                         uploadFile: jest.fn()
                     }
                 },
+                {
+                    provide: Grammar,
+                    useValue: {
+                        getGrammar: jest.fn()
+                    }
+                }
             ]
         }).compile();
 

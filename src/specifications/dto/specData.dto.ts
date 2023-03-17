@@ -1,11 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
+import {ApiProperty} from "@nestjs/swagger";
 
-export class obj  {
+export class obj {
     @ApiProperty()
     type: object
 }
 
-export class Pipelineobj  {
+export class Pipelineobj {
     @ApiProperty()
     event_name: string
     @ApiProperty()
@@ -25,7 +25,7 @@ export class specDimensionDTO {
     input: obj
 }
 
-export class specDataset{
+export class specDataset {
     @ApiProperty()
     ingestion_type: string;
     @ApiProperty()
@@ -73,9 +73,9 @@ export class pipelineDto {
     @ApiProperty()
     pipeline_name: string;
     @ApiProperty()
-    pipeline_type: string; 
-    @ApiProperty({ isArray: true, type: () => Pipelineobj })
-    pipeline:object[]
+    pipeline_type: string;
+    @ApiProperty({isArray: true, type: () => Pipelineobj})
+    pipeline: object[]
 }
 
 export class Result {
@@ -92,9 +92,16 @@ export class scheduleDto {
 }
 
 
-export class s3DTO { 
+export class s3DTO {
     @ApiProperty()
-    scheduled_at?:string;
+    scheduled_at?: string;
     @ApiProperty()
-    scheduled_type:string;
+    scheduled_type: string;
+}
+
+export class GetGrammar {
+    @ApiProperty()
+    grammar_type: string;
+    @ApiProperty()
+    grammar_name: string;
 }
