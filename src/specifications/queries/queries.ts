@@ -119,7 +119,7 @@ export function checkRecordExists(coulmnName: string, tableName: string) {
 }
 
 export function getGrammar(tableName, grammarName) {
-    const querStr = `SELECT schema FROM spec."${tableName}" WHERE cname = $1`;
+    const querStr = `SELECT schema FROM spec."${tableName}" WHERE program = $1`;
     return {query: querStr, values: [grammarName]};
 }
 
