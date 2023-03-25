@@ -1,3 +1,4 @@
+import { PipelineService } from './../service/pipeline-old/pipeline.service';
 import {EventService} from './../service/event/event.service';
 import {DimensionService} from './../service/dimension/dimension.service';
 import {Body, Controller, Get, Param, Post, Res, Query} from '@nestjs/common';
@@ -22,7 +23,7 @@ import {Grammar} from '../service/grammar/grammar.service';
 @Controller('/spec')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private datasetService: DatasetService,
-                 private scheduleService: ScheduleService, private s3service: S3Service, private grammar: Grammar) {
+                 private scheduleService: ScheduleService, private s3service: S3Service, private grammar: Grammar, private pipelineService:PipelineService) {
     }
 
     @Get('/hello')
@@ -122,20 +123,20 @@ export class SpecificationController {
     }
 
     
-    // @Post('/pipeline')
-    // async createSpecPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
-    //     try {
-    //         const result: any = await this.pipelineService.createSpecPipeline(pipelineDto);
-    //         if (result?.code == 400) {
-    //             response.status(400).send({"message": result.error});
-    //         }
-    //         else {
-    //             response.status(200).send({"message": result.message});
-    //         }
-    //     } catch (error) {
-    //         console.error('createSpecPipelineNew: ', error);
-    //     }
-    // }
+    @Post('/pipeline')
+    async createSpecPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
+        try {
+            const result: any = await this.pipelineService.createSpecPipeline(pipelineDto);
+            if (result?.code == 400) {
+                response.status(400).send({"message": result.error});
+            }
+            else {
+                response.status(200).send({"message": result.message});
+            }
+        } catch (error) {
+            console.error('createSpecPipelineNew: ', error);
+        }
+    }
 
     @Get('/grammar')
     async getGrammar(@Query()getGrammar: GetGrammar, @Res() response: Response) {
