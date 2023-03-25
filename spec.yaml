@@ -30,70 +30,18 @@ paths:
           schema:
             example:
               {
-    "ingestion_type": "event",
-    "event_name": "students_attendance",
-    "input": {
-        "type": "object",
-        "properties": {
-            "event_name": {
-                "type": "string"
-            },
-            "event": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "date": {
-                            "type": "string",
-                            "shouldnotnull": true,
-                            "format": "date"
-                        },
-                        "school_id": {
-                            "type": "number",
-                            "shouldnotnull": true,
-                            "minimum": 1000000000,
-                            "maximum": 9999999999
-                        },
-                        "grade": {
-                            "type": "number",
-                            "shouldnotnull": true,
-                            "minimum": 1,
-                            "maximum": 12
-                        },
-                        "gender": {
-                            "type": "string",
-                            "shouldnotnull": true
-                        },
-                        "total_students": {
-                            "type": "number",
-                            "shouldnotnull": true
-                        },
-                        "students_attendance_marked": {
-                            "type": "number",
-                            "shouldnotnull": true
-                        },
-                        "students_marked_present": {
-                            "type": "number",
-                            "shouldnotnull": true
-                        }
-                    },
-                    "required": [
-                        "date",
-                        "school_id",
-                        "grade",
-                        "gender",
-                        "total_students",
-                        "students_attendance_marked",
-                        "students_marked_present"
-                    ]
+            "program": "student_attendance",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "shouldNotNull": true,
+                        "format": "date",
+                        "unique": "true"
+                    }
                 }
             }
-        },
-        "required": [
-            "event_name",
-            "event"
-        ]
-    }
 }
       responses:
         200:
@@ -103,11 +51,8 @@ paths:
             properties:
               message:
                 type: "string"
-                example: "Event Spec Created Successfully"
-              pid:
-                type: "integer"
-                example: 1
-              event_name:
+                example: "Event Grammar Created Successfully"
+              program:
                 type: "string"
                 example: "students_attendance"
         400:

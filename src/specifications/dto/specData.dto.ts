@@ -18,9 +18,7 @@ export class Pipelineobj {
 
 export class specDimensionDTO {
     @ApiProperty()
-    ingestion_type: string;
-    @ApiProperty()
-    dimension_name: string;
+    program: string;
     @ApiProperty()
     input: obj
 }
