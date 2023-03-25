@@ -1,5 +1,5 @@
 export function checkName(coulmnName: string, tableName: string) {
-    const querStr = `SELECT ${coulmnName}, pid FROM spec.${tableName} WHERE ${coulmnName} = '$1'`;
+    const querStr = `SELECT ${coulmnName} FROM spec.${tableName} WHERE ${coulmnName} = '$1'`;
     return querStr
 }
 
@@ -14,7 +14,7 @@ export function checkDuplicacy(columnNames: string[], tableName: string, JsonPro
 }
 
 export function insertSchema(columnNames: string[], tableName: string) {
-    const queryStr = `INSERT INTO spec.${tableName}(${columnNames[0]}, ${columnNames[1]}) VALUES ($1,$2) RETURNING pid`;
+    const queryStr = `INSERT INTO spec.${tableName}(${columnNames[0]}, ${columnNames[1]}) VALUES ($1,$2) RETURNING *`;
     return queryStr;
 }
 
