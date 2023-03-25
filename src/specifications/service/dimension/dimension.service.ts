@@ -1,8 +1,9 @@
 import {GenericFunction} from './../genericFunction';
+import {checkDuplicacy, checkName, createTable, insertPipeline, insertSchema} from '../../queries/queries';
 import {DataSource} from 'typeorm';
 import {InjectDataSource} from '@nestjs/typeorm';
-import { checkName, insertSchema } from 'src/specifications/queries/queries';
-import { masterSchema } from 'src/utils/spec-data';
+import {dimensionSchemaData, masterSchema} from "../../../utils/spec-data";
+import {dimensionResponse} from "../../dto/specData.dto";
 
 export class DimensionService {
     constructor(@InjectDataSource() private dataSource: DataSource, private specService: GenericFunction) {
