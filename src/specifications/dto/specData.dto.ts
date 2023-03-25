@@ -36,6 +36,8 @@ export class specDataset {
 
 export class specEventDTO {
     @ApiProperty()
+    ingestion_type: string;
+    @ApiProperty()
     event_name: JSON;
     @ApiProperty()
     input: obj
