@@ -26,17 +26,19 @@ export class DimensionService {
                         try {
                             await queryRunner.connect();
                             await queryRunner.startTransaction();
-                            let insertQuery = insertSchema(['program', 'schema'], 'DimensionGrammar');
+                            let insertQuery = insertSchema(['program', 'schema', '"eventType"', 'name', '"updatedAt"'], 'DimensionGrammar');
                             insertQuery = insertQuery.replace('$1', `'${dimensionDTO.program.toLowerCase()}'`);
                             insertQuery = insertQuery.replace('$2', `'${JSON.stringify(newObj)}'`);
+                            insertQuery = insertQuery.replace('$3', `'EXTERNAL'`);
+                            insertQuery = insertQuery.replace('$4', `'${dimensionDTO.program.toLowerCase()}'`);
+                            insertQuery = insertQuery.replace('$5', 'CURRENT_TIMESTAMP');
                             const insertResult = await queryRunner.query(insertQuery);
                             if (insertResult[0].pid) {
                                     await queryRunner.commitTransaction();
                                     return {
                                         "code": 200,
                                         "message": "Dimension spec created successfully",
-                                        "dimension_name": dimensionDTO.dimension_name,
-                                        "pid": insertResult[0].pid
+                                        "program": dimensionDTO.dimension_name,
                                     };
                                 
                             } else {

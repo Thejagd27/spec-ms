@@ -43,8 +43,7 @@ export class SpecificationController {
             else {
                 response.status(200).send({
                     "message": result.message,
-                    "dimension_name": result.dimension_name,
-                    "pid": result.pid
+                    "dimension_name": result.program,
                 });
             }
         } catch (error) {
