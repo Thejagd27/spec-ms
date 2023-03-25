@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { GenericFunction } from '../genericFunction';
 import { HttpCustomService } from '../HttpCustomService';
-import { PipelineService } from '../pipeline/pipeline.service';
+import { PipelineService } from '../pipeline-old/pipeline.service';
 import { ScheduleService } from './schedule.service';
 
 describe('ScheduleService', () => {

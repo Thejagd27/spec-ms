@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import Ajv2019 from "ajv/dist/2019";
 import addFormats from "ajv-formats";
+import { jsonObject } from "./pipeline-generic/jsonObjects";
 
 const ajv = new Ajv2019();
 addFormats(ajv);
@@ -61,5 +62,23 @@ export class GenericFunction {
             }
         });
         return dbColumns;
+    }
+
+
+    replaceJsonValues(jsonObjName: any, replacements: any) {
+        let jsonObj;
+        for (let jsonRecord of jsonObject) {
+            if (jsonRecord.name === jsonObjName) {
+                jsonObj = jsonRecord.object;
+            }
+        }
+        let jsonString = JSON.stringify(jsonObj);
+        const keys = Object.keys(replacements);
+
+        keys.forEach(key => {
+            const regex = new RegExp(`\\#\\{${key}\\}`, 'g');
+            jsonString = jsonString.replace(regex, replacements[key]);
+        });
+        return JSON.parse(jsonString);
     }
 }
