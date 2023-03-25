@@ -6,7 +6,7 @@ import { scheduleSchema } from '../../../utils/spec-data';
 import { DataSource } from 'typeorm';
 import { GenericFunction } from '../genericFunction';
 var cronValidator = require('cron-expression-validator');
-import { PipelineService } from '../pipeline-old/pipeline.service';
+import { PipelineService } from '../pipeline/pipeline.service';
 
 @Injectable()
 export class ScheduleService {
@@ -15,6 +15,7 @@ export class ScheduleService {
 
     async schedulePipeline(scheduleData: scheduleDto) {
         let isValidSchema: any;
+        let transformerName: string = "";
         const queryRunner = this.dataSource.createQueryRunner();
         isValidSchema = await this.specService.ajvValidator(scheduleSchema, scheduleData);
         if (isValidSchema.errors) {
@@ -29,10 +30,11 @@ export class ScheduleService {
                 let queryResult = getPipelineSpec(scheduleData?.pipeline_name.toLowerCase());
                 const resultPipeName = await this.dataSource.query(queryResult);
                 if (resultPipeName.length === 1) {
+                    transformerName = resultPipeName[0]?.transformer_file;
                     await queryRunner.connect();
                     await queryRunner.startTransaction();
                     try {
-                        const result = await this.pipelineService.CreatePipeline( scheduleData?.pipeline_name.toLowerCase(), scheduleData?.scheduled_at)
+                        const result = await this.pipelineService.CreatePipeline(transformerName, scheduleData?.pipeline_name.toLowerCase(), scheduleData?.scheduled_at)
                         if (result?.code === 200) {
                             let checkPipelinePid = checkRecordExists('pipeline_pid', 'schedule');
                             checkPipelinePid = checkPipelinePid.replace('$1', resultPipeName[0].pid);

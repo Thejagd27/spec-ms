@@ -1,9 +1,8 @@
 import {GenericFunction} from './../genericFunction';
-import {checkDuplicacy, checkName, createTable, insertPipeline, insertSchema} from '../../queries/queries';
 import {DataSource} from 'typeorm';
 import {InjectDataSource} from '@nestjs/typeorm';
-import {dimensionSchemaData} from "../../../utils/spec-data";
-import {dimensionResponse} from "../../dto/specData.dto";
+import { checkName, insertSchema } from 'src/specifications/queries/queries';
+import { masterSchema } from 'src/utils/spec-data';
 
 export class DimensionService {
     constructor(@InjectDataSource() private dataSource: DataSource, private specService: GenericFunction) {
@@ -11,7 +10,7 @@ export class DimensionService {
 
     async createDimension(dimensionDTO) {
         let newObj = this.specService.convertKeysToLowerCase(dimensionDTO);
-        const isValidSchema: any = await this.specService.ajvValidator(dimensionSchemaData, newObj);
+        const isValidSchema: any = await this.specService.ajvValidator(masterSchema, newObj);
         if (isValidSchema?.errors) {
             return {"code": 400, error: isValidSchema.errors}
         } else {
