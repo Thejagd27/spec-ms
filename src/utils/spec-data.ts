@@ -154,7 +154,7 @@ export const masterSchema = {
                                     "shouldnotnull": true
                                 }
                             },
-                            "required": ["type", "unique"],
+                            "required": ["type"],
                             "shouldnotnull": true
                         }
                     }

@@ -1,5 +1,5 @@
 export function checkName(coulmnName: string, tableName: string) {
-    const querStr = `SELECT ${coulmnName} FROM spec."${tableName}" WHERE ${coulmnName} = '$1'`;
+    const querStr = `SELECT ${coulmnName} FROM spec."${tableName}" WHERE ${coulmnName} = '$1' AND "eventType" = 'EXTERNAL'`;
     return querStr
 }
 
