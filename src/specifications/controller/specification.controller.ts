@@ -20,7 +20,7 @@ import {S3Service} from '../service/s3/s3.service';
 import {Grammar} from '../service/grammar/grammar.service';
 
 @ApiTags('spec-ms')
-@Controller('/spec')
+@Controller('')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private datasetService: DatasetService,
                  private scheduleService: ScheduleService, private s3service: S3Service, private grammar: Grammar, private pipelineService:PipelineService) {
