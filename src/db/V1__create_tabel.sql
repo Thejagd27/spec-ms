@@ -15,3 +15,7 @@ CREATE TABLE IF NOT EXISTS ingestion."FileTracker" (
   processed_data_count NUMERIC,
   error_data_count     NUMERIC
 );
+
+ALTER TABLE spec."EventGrammar" ALTER  "instrumentField" DROP NOT NULL;
+ALTER TABLE spec."EventGrammar" ALTER  "instrumentType" DROP NOT NULL;
+ALTER TABLE spec."EventGrammar" ALTER  "dimensionMapping" DROP NOT NULL;
