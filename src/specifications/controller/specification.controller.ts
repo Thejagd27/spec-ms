@@ -1,4 +1,4 @@
-import { PipelineService } from './../service/pipeline-old/pipeline.service';
+import {PipelineService} from './../service/pipeline-old/pipeline.service';
 import {EventService} from './../service/event/event.service';
 import {DimensionService} from './../service/dimension/dimension.service';
 import {Body, Controller, Get, Param, Post, Res, Query} from '@nestjs/common';
@@ -23,7 +23,7 @@ import {Grammar} from '../service/grammar/grammar.service';
 @Controller('')
 export class SpecificationController {
     constructor(private dimensionService: DimensionService, private EventService: EventService, private datasetService: DatasetService,
-                 private scheduleService: ScheduleService, private s3service: S3Service, private grammar: Grammar, private pipelineService:PipelineService) {
+                private scheduleService: ScheduleService, private s3service: S3Service, private grammar: Grammar, private pipelineService: PipelineService) {
     }
 
     @Get('/hello')
@@ -86,15 +86,11 @@ export class SpecificationController {
         }
     }
 
-   
-
-    
-   
 
     @Post('/schedule')
-    async schedulePipeline(@Body() scheduleDto: scheduleDto, @Res()response: Response) {
+    async schedulePG(@Body() scheduleDto: scheduleDto, @Res()response: Response) {
         try {
-            const result: Result = await this.scheduleService.schedulePipeline(scheduleDto)
+            const result: Result = await this.scheduleService.scheduleProcessorGroup(scheduleDto);
             if (result?.code == 400) {
                 response.status(400).send({"message": result.error});
             }
@@ -102,7 +98,7 @@ export class SpecificationController {
                 response.status(200).send({"message": result?.message});
             }
         } catch (error) {
-            console.error("schedule.Pipeline impl :", error)
+            console.error('specification.controller.schedulePG: ', error);
         }
     }
 
@@ -122,7 +118,7 @@ export class SpecificationController {
         }
     }
 
-    
+
     @Post('/pipeline')
     async createSpecPipeline(@Body() pipelineDto: pipelineDto, @Res()response: Response) {
         try {

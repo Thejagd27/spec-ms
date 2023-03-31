@@ -1,80 +1,130 @@
-import { Injectable } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { scheduleDto } from '../../dto/specData.dto';
-import {  checkRecordExists, getPipelineSpec, insertIntoSchedule, updateSchedule } from '../../queries/queries';
-import { scheduleSchema } from '../../../utils/spec-data';
-import { DataSource } from 'typeorm';
-import { GenericFunction } from '../genericFunction';
-var cronValidator = require('cron-expression-validator');
-import { PipelineService } from '../pipeline-old/pipeline.service';
+import {Injectable} from '@nestjs/common';
+import {InjectDataSource} from '@nestjs/typeorm';
+import {scheduleDto} from '../../dto/specData.dto';
+import {scheduleSchema} from '../../../utils/spec-data';
+import {DataSource} from 'typeorm';
+import {GenericFunction} from '../genericFunction';
+import {HttpCustomService} from "../HttpCustomService";
+
+let cronValidator = require('cron-expression-validator');
 
 @Injectable()
 export class ScheduleService {
-    constructor(@InjectDataSource() private dataSource: DataSource, private specService: GenericFunction, private pipelineService: PipelineService) {
+    nifiUrl: string = `${process.env.NIFI_HOST}:${process.env.NIFI_PORT}`;
+
+    constructor(@InjectDataSource() private dataSource: DataSource, private specService: GenericFunction, private http: HttpCustomService) {
     }
 
-    async schedulePipeline(scheduleData: scheduleDto) {
+    async scheduleProcessorGroup(scheduleData: scheduleDto) {
         let isValidSchema: any;
-        const queryRunner = this.dataSource.createQueryRunner();
         isValidSchema = await this.specService.ajvValidator(scheduleSchema, scheduleData);
         if (isValidSchema.errors) {
-            return { code: 400, error: isValidSchema.errors }
-        }
-        else {
-            let result = cronValidator.isValidCronExpression(scheduleData.scheduled_at, { error: true });
+            return {code: 400, error: isValidSchema.errors}
+        } else {
+            let result = cronValidator.isValidCronExpression(scheduleData.scheduled_at, {error: true});
             if (result.errorMessage) {
-                return { code: 400, error: result.errorMessage }
-            }
-            else {
-                let queryResult = getPipelineSpec(scheduleData?.pipeline_name.toLowerCase());
-                const resultPipeName = await this.dataSource.query(queryResult);
-                if (resultPipeName.length === 1) {
-                    await queryRunner.connect();
-                    await queryRunner.startTransaction();
-                    try {
-                        const result = await this.pipelineService.CreatePipeline( scheduleData?.pipeline_name.toLowerCase(), scheduleData?.scheduled_at)
-                        if (result?.code === 200) {
-                            let checkPipelinePid = checkRecordExists('pipeline_pid', 'schedule');
-                            checkPipelinePid = checkPipelinePid.replace('$1', resultPipeName[0].pid);
-                            const recordsCount = await queryRunner.query(checkPipelinePid);
-                            if (recordsCount?.length > 0) {
-                                let updateScheduleQry = updateSchedule(scheduleData.scheduled_at, recordsCount[0].pid)
-                                let updateResult = await queryRunner.query(updateScheduleQry);
-                                if (updateResult.length > 0) {
-                                    return { code: 200, "message": "Successfully updated the schedule" }
-                                }
-                                else {
-                                    return { code: 400, "error": "Failed to update the schedule" };
-                                }
-                            }
-                            else {
-                                const queryStr = insertIntoSchedule(['pipeline_pid', 'scheduled_at'], [resultPipeName[0].pid, scheduleData?.scheduled_at]);
-                                let resultSchedule = await queryRunner.query(queryStr);
-                                if (resultSchedule[0]?.pid) {
-                                    await queryRunner.commitTransaction();
-                                    return { code: 200, message: `${scheduleData.pipeline_name} has been successfully scheduled` }
-                                }
-                                else {
-                                    await queryRunner.rollbackTransaction();
-                                    return { code: 400, error: "Could not insert into schedule table" };
-                                }
-                            }
-                        }
-                        else {
-                            await queryRunner.rollbackTransaction();
-                            return { code: 400, error: `Could not create schedule for ${scheduleData.pipeline_name}` }
-                        }
-                    } catch (error) {
-                        await queryRunner.rollbackTransaction();
-                        return { code: 400, error: "Something went wrong" }
-                    } finally {
-                        await queryRunner.release();
+                return {code: 400, error: result.errorMessage}
+            } else {
+                let result = await this.CreateSchedule(scheduleData?.processor_group_name, scheduleData.scheduled_at, scheduleData.processor_name);
+                if (result.code === 200) {
+                    return {code: 200, "message": "Successfully updated the schedule"}
+                } else {
+                    return {
+                        code: 400,
+                        error: `${result.message} with name ${scheduleData.processor_group_name}`
                     }
                 }
-                else {
-                    return { code: 400, error: "Pipeline name not Found" }
+            }
+        }
+    }
+
+    async CreateSchedule(processorGroupName, scheduledAt, processorName) {
+        const processorGroups = await this.getRootDetails();
+        let pg_list = processorGroups.data;
+        let counter = 0;
+        let data = {};
+        let pg_group = pg_list['processGroupFlow']['flow']['processGroups'];
+        for (let pg of pg_group) {
+            if (pg.component.name == processorGroupName) {
+                let pg_source = pg;
+                counter = counter + 1;
+                data = {
+                    "id": pg_source['component']['id'],
+                    "state": "STOPPED",  // RUNNING or STOP
+                    "disconnectedNodeAcknowledged": false
+                };
+                await this.http.put(`${this.nifiUrl}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data,);
+                return await this.updateProcessorProperty(pg_source['component']['id'], processorGroupName, scheduledAt, processorName)
+            }
+        }
+        return {
+            code: 100, message: 'Processor Group does not exists'
+        }
+    }
+
+    async getRootDetails() {
+        let res = await this.http.get(`${this.nifiUrl}/nifi-api/process-groups/root`);
+        let nifi_root_pg_id = res.data['component']['id'];
+        let resp = await this.http.get(`${this.nifiUrl}/nifi-api/flow/process-groups/${nifi_root_pg_id}`);
+        return resp;
+    }
+
+    async updateProcessorProperty(pg_source_id, processorGroupName, schedulePeriod, processorName) {
+        const pg_ports = await this.getProcessorGroupPorts(pg_source_id);
+        if (pg_ports) {
+            for (let processor of pg_ports['processGroupFlow']['flow']['processors']) {
+                if (processor.component.name == processorName) {
+                    let update_processor_property_body = {
+                        "component": {
+                            "id": processor['component']['id'],
+                            "name": processor['component']['name'],
+                            "config": {
+                                "schedulingPeriod": schedulePeriod,
+                                "schedulingStrategy": "CRON_DRIVEN"
+                            },
+                            "state": "STOPPED"
+                        },
+                        "revision": {
+                            "clientId": "",
+                            "version": processor['revision']['version']
+                        },
+                        "disconnectedNodeAcknowledged": "false"
+                    };
+                    let url = `${this.nifiUrl}/nifi-api/processors/${processor?.component?.id}`;
+                    try {
+                        let result = await this.http.put(url, update_processor_property_body);
+                        if (result) {
+                           let data = {
+                                "id": pg_source_id,
+                                "state": "RUNNING",  // RUNNING or STOP
+                                "disconnectedNodeAcknowledged": false
+                            };
+                            await this.http.put(`${this.nifiUrl}/nifi-api/flow/process-groups/${pg_source_id}`, data);
+                            return {
+                                code: 200,
+                                message: `Successfully updated the properties in the ${processorGroupName}`
+                            };
+                        } else {
+                            return {code: 100, message: `Failed to update the properties in the ${processorGroupName}`};
+                        }
+                    } catch (error) {
+                        return {code: 400, error: "Could not update the processor"};
+                    }
                 }
             }
+        }
+    }
+
+    async getProcessorGroupPorts(pg_source_id) {
+        let url = `${this.nifiUrl}/nifi-api/flow/process-groups/${pg_source_id}`;
+        try {
+            let res = await
+                this.http.get(url);
+            if (res.data) {
+                return res.data;
+            }
+        } catch (error) {
+            return {code: 400, error: "could not get Processor Group Port"}
         }
     }
 }

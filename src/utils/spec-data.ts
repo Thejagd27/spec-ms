@@ -95,7 +95,7 @@ export const dimensionSchemaData = {
                                     "pattern": "string",
                                     "shouldnotnull": true
                                 },
-                                "pattern":{
+                                "pattern": {
                                     "type": "string",
                                     "shouldnotnull": true
                                 }
@@ -179,7 +179,7 @@ export const transformerSchemaData = {
                 "pattern": "^.*\.(csv)$",
                 "shouldnotnull": true
             },
-            
+
             "operation": {
                 "type": "string",
                 "shouldnotnull": true
@@ -210,7 +210,7 @@ export const transformerDimesnsionSchemaData = {
                 "pattern": "^.*\.(csv)$",
                 "shouldnotnull": true
             },
-           
+
             "operation": {
                 "type": "string",
                 "shouldnotnull": true
@@ -434,12 +434,12 @@ export const datasetSchemaData = {
                                                     "pattern": "string",
                                                     "shouldnotnull": true
                                                 },
-                                                "pattern":{
+                                                "pattern": {
                                                     "type": "string",
                                                     "shouldnotnull": true
                                                 }
                                             },
-                                            "required": ["type","pattern"]
+                                            "required": ["type", "pattern"]
                                         },
                                         "column": {
                                             "type": "array",
@@ -458,12 +458,12 @@ export const datasetSchemaData = {
                                                     "pattern": "string",
                                                     "shouldnotnull": true
                                                 },
-                                                "pattern":{
+                                                "pattern": {
                                                     "type": "string",
                                                     "shouldnotnull": true
                                                 }
                                             },
-                                            "required": ["type","pattern"]
+                                            "required": ["type", "pattern"]
                                         }
                                     },
                                     "required": [
@@ -617,12 +617,12 @@ export const datasetSchemaData = {
                                                                     "pattern": "string",
                                                                     "shouldnotnull": true
                                                                 },
-                                                                "pattern":{
+                                                                "pattern": {
                                                                     "type": "string",
                                                                     "shouldnotnull": true
                                                                 }
                                                             },
-                                                            "required": ["type","pattern"]
+                                                            "required": ["type", "pattern"]
                                                         },
                                                         "numerator_col": {
                                                             "type": "object",
@@ -633,11 +633,11 @@ export const datasetSchemaData = {
                                                                     "pattern": "string",
                                                                     "shouldnotnull": true
                                                                 },
-                                                                "pattern":{
+                                                                "pattern": {
                                                                     "type": "string"
                                                                 }
                                                             },
-                                                            "required": ["type","pattern"]
+                                                            "required": ["type", "pattern"]
                                                         },
                                                         "denominator_col": {
                                                             "type": "object",
@@ -648,11 +648,11 @@ export const datasetSchemaData = {
                                                                     "pattern": "string",
                                                                     "shouldnotnull": true
                                                                 },
-                                                                "pattern":{
+                                                                "pattern": {
                                                                     "type": "string"
                                                                 }
                                                             },
-                                                            "required": ["type","pattern"]
+                                                            "required": ["type", "pattern"]
                                                         },
                                                         "update_cols": {
                                                             "type": "array",
@@ -744,7 +744,7 @@ export const datasetSchemaData = {
                                                                     "type": "object",
                                                                     "shouldnotnull": true,
                                                                     "properties": {
-                                            
+
                                                                         "filter_col": {
                                                                             "type": "object",
                                                                             "shouldnotnull": true,
@@ -754,12 +754,12 @@ export const datasetSchemaData = {
                                                                                     "pattern": "string",
                                                                                     "shouldnotnull": true
                                                                                 },
-                                                                                "pattern":{
+                                                                                "pattern": {
                                                                                     "type": "string",
                                                                                     "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type","pattern"]
+                                                                            "required": ["type", "pattern"]
                                                                         },
                                                                         "filter_type": {
                                                                             "type": "object",
@@ -770,12 +770,12 @@ export const datasetSchemaData = {
                                                                                     "pattern": "string",
                                                                                     "shouldnotnull": true
                                                                                 },
-                                                                                "pattern":{
+                                                                                "pattern": {
                                                                                     "type": "string",
                                                                                     "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type","pattern"]
+                                                                            "required": ["type", "pattern"]
                                                                         },
                                                                         "filter": {
                                                                             "type": "object",
@@ -786,12 +786,12 @@ export const datasetSchemaData = {
                                                                                     "pattern": "string",
                                                                                     "shouldnotnull": true
                                                                                 },
-                                                                                "pattern":{
+                                                                                "pattern": {
                                                                                     "type": "string",
                                                                                     "shouldnotnull": true
                                                                                 }
                                                                             },
-                                                                            "required": ["type","pattern"]
+                                                                            "required": ["type", "pattern"]
                                                                         }
                                                                     },
                                                                     "required": [
@@ -800,7 +800,7 @@ export const datasetSchemaData = {
                                                                         "filter"
                                                                     ]
                                                                 },
-                                                                "required":{
+                                                                "required": {
                                                                     "type": "array",
                                                                     "shouldnotnull": true,
                                                                     "maxItems": 3,
@@ -830,7 +830,7 @@ export const datasetSchemaData = {
                                                             ]
                                                         }
                                                     },
-                                                    "required": [ "target_table"]
+                                                    "required": ["target_table"]
                                                 },
                                                 "required": {
                                                     "type": "array",
@@ -838,13 +838,13 @@ export const datasetSchemaData = {
                                                     "maxItems": 1,
                                                     "items": [
 
-                                                        
+
                                                         {
                                                             "type": "string",
                                                             "pattern": "target_table",
                                                             "shouldnotnull": true
                                                         }
-                                                        
+
                                                     ]
                                                 }
                                             },
@@ -918,18 +918,23 @@ export const datasetSchemaData = {
 export const scheduleSchema = {
     "type": "object",
     "properties": {
-        "pipeline_name": {
+        "processor_group_name": {
             "type": "string",
             "shouldnotnull": true
         },
         "scheduled_at": {
             "type": "string",
             "shouldnotnull": true
-        }
+        },
+        "processor_name": {
+            "type": "string",
+            "shouldnotnull": true
+        },
     },
     "required": [
-        "pipeline_name",
+        "processor_group_name",
         "scheduled_at",
+        "processor_name"
     ],
 };
 
@@ -940,7 +945,7 @@ export const schemaPipeline = {
             "type": "string",
             "shouldnotnull": true
         }
-        
+
     },
     "required": [
         "pipeline_name"
