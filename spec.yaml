@@ -777,11 +777,20 @@ paths:
                     created_at: 
                       type: "string"
                       example: "2023-01-27 18:18:08.007215"
+                    total_data_count:
+                      type: "integer"
+                      example: 2000
+                    processed_data_count:
+                      type: "integer"
+                      example: 1199
+                    error_data_count:
+                      type: "integer"
+                      example: 1
         400:
           description: "Something went wrong"
           schema:
-            $ref: "#/definitions/generic_error" 
-   
+            $ref: "#/definitions/generic_error"
+
   /ingestion/national_programs:
     post:
       tags:
@@ -798,7 +807,7 @@ paths:
           name: "body"
           type: file
           required: true
-       
+
 
       responses:
         200:
@@ -824,9 +833,6 @@ paths:
         - "multipart/form-data"
       produces:
         - "application/json"
-     
-       
-
       responses:
         200:
           description: "Files uploaded successfully"
@@ -847,4 +853,5 @@ definitions:
       properties:
         message:
           type: "string"
+          example: "Invalid Input"
           example: "Invalid Input"

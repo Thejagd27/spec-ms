@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS ingestion."FileTracker" (
   ingestion_name       VARCHAR NOT NULL,
   file_status          VARCHAR NOT NULL,
   filesize             NUMERIC NOT NULL,
+  total_data_count     NUMERIC,
   processed_data_count NUMERIC,
   error_data_count     NUMERIC
 );
