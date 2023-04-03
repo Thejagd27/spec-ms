@@ -140,6 +140,15 @@ export class ScheduleService {
             case 'Plugin Rev-and-monitor local':
                 return 'Lists3_local';
                 break;
+            case 'Run_adapters':
+                return 'GenerateFlowFile_adapter';
+                break;
+            case 'Run Latest Code local':
+                return 'Listlocal';
+                break;
+            case 'Run Latest Code aws':
+                return 'ListS3Files';
+                break;
         }
     }
 }
