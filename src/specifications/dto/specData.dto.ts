@@ -87,8 +87,6 @@ export class scheduleDto {
     processor_group_name?: string;
     @ApiProperty()
     scheduled_at?: string;
-    @ApiProperty()
-    processor_name: string
 }
 
 

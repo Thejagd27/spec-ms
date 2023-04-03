@@ -404,9 +404,6 @@ paths:
               scheduled_at:
                 type: "string"
                 example: "0 0/1 * 1/1 * ? *"
-              processor_name:
-                type: "string"
-                example: "Lists3"
       responses:
         200:
           description: "Successfully updated the schedule"
@@ -438,9 +435,9 @@ paths:
           name: "grammar_name"
           type: string
           required: true
-        
-          
-     
+
+
+
 
       responses:
         200:
@@ -461,12 +458,12 @@ paths:
                   students_attendance_marked:
                     type: integer
                     unique: true
-            
 
-          
-            
-    
-               
+
+
+
+
+
         400:
           description: "No records found"
           schema:
@@ -767,14 +764,14 @@ paths:
                 type: "array"
                 items:
                   type: "object"
-                  properties: 
-                    file_status: 
+                  properties:
+                    file_status:
                       type: "string"
                       example: uploaded
-                    pid: 
+                    pid:
                       type: "string"
                       example: 1
-                    created_at: 
+                    created_at:
                       type: "string"
                       example: "2023-01-27 18:18:08.007215"
                     total_data_count:
@@ -853,5 +850,4 @@ definitions:
       properties:
         message:
           type: "string"
-          example: "Invalid Input"
           example: "Invalid Input"

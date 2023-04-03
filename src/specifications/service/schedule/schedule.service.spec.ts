@@ -55,8 +55,7 @@ describe('ScheduleService', () => {
     it("validator", async () => {
         let input = {
             // "processor_group_name": "Plugin Student Attendance aws",
-            "scheduled_at": "0 6 13 ? * *",
-            "processor_name": "Lists3"
+            "scheduled_at": "0 6 13 ? * *"
         };
         let result = {
             "code": 400, "error": [
@@ -78,8 +77,7 @@ describe('ScheduleService', () => {
     it('cron expression validation  ', async () => {
         let input = {
             "processor_group_name": "Plugin Student Attendance aws",
-            "scheduled_at": "0hg",
-            "processor_name": "Lists3"
+            "scheduled_at": "0hg"
         };
         let result = {"code": 400, "error": "Unexpected end of expression"};
         expect(await service.scheduleProcessorGroup(input)).toStrictEqual(result)

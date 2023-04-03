@@ -925,16 +925,11 @@ export const scheduleSchema = {
         "scheduled_at": {
             "type": "string",
             "shouldnotnull": true
-        },
-        "processor_name": {
-            "type": "string",
-            "shouldnotnull": true
-        },
+        }
     },
     "required": [
         "processor_group_name",
-        "scheduled_at",
-        "processor_name"
+        "scheduled_at"
     ],
 };
 

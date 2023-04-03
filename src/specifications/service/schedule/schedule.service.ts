@@ -25,7 +25,7 @@ export class ScheduleService {
             if (result.errorMessage) {
                 return {code: 400, error: result.errorMessage}
             } else {
-                let result = await this.CreateSchedule(scheduleData?.processor_group_name, scheduleData.scheduled_at, scheduleData.processor_name);
+                let result = await this.CreateSchedule(scheduleData?.processor_group_name, scheduleData.scheduled_at);
                 if (result.code === 200) {
                     return {code: 200, "message": "Successfully updated the schedule"}
                 } else {
@@ -38,7 +38,7 @@ export class ScheduleService {
         }
     }
 
-    async CreateSchedule(processorGroupName, scheduledAt, processorName) {
+    async CreateSchedule(processorGroupName, scheduledAt) {
         const processorGroups = await this.getRootDetails();
         let pg_list = processorGroups.data;
         let counter = 0;
@@ -54,7 +54,7 @@ export class ScheduleService {
                     "disconnectedNodeAcknowledged": false
                 };
                 await this.http.put(`${this.nifiUrl}/nifi-api/flow/process-groups/${pg_source['component']['id']}`, data,);
-                return await this.updateProcessorProperty(pg_source['component']['id'], processorGroupName, scheduledAt, processorName)
+                return await this.updateProcessorProperty(pg_source['component']['id'], processorGroupName, scheduledAt)
             }
         }
         return {
@@ -69,11 +69,11 @@ export class ScheduleService {
         return resp;
     }
 
-    async updateProcessorProperty(pg_source_id, processorGroupName, schedulePeriod, processorName) {
+    async updateProcessorProperty(pg_source_id, processorGroupName, schedulePeriod) {
         const pg_ports = await this.getProcessorGroupPorts(pg_source_id);
         if (pg_ports) {
             for (let processor of pg_ports['processGroupFlow']['flow']['processors']) {
-                if (processor.component.name == processorName) {
+                if (processor.component.name == await this.getProcessorName(processorGroupName)) {
                     let update_processor_property_body = {
                         "component": {
                             "id": processor['component']['id'],
@@ -94,7 +94,7 @@ export class ScheduleService {
                     try {
                         let result = await this.http.put(url, update_processor_property_body);
                         if (result) {
-                           let data = {
+                            let data = {
                                 "id": pg_source_id,
                                 "state": "RUNNING",  // RUNNING or STOP
                                 "disconnectedNodeAcknowledged": false
@@ -125,6 +125,21 @@ export class ScheduleService {
             }
         } catch (error) {
             return {code: 400, error: "could not get Processor Group Port"}
+        }
+    }
+
+    async getProcessorName(processorGroupName) {
+        switch (processorGroupName) {
+            case 'Plugin Student Attendance aws':
+            case  'Plugin Teachers Attendance aws':
+            case 'Plugin Rev-and-monitor aws':
+                return 'Lists3';
+                break;
+            case 'Plugin Student Attendance local':
+            case 'Plugin Teachers Attendance local':
+            case 'Plugin Rev-and-monitor local':
+                return 'Lists3_local';
+                break;
         }
     }
 }
