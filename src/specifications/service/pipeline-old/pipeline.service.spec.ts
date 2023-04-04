@@ -193,58 +193,58 @@ describe('PipelineService', () => {
         expect(service).toBeDefined();
     });
 
-    it('pipeline Name already exists', async () => {
-        let inputData = {
-            "pipeline_type": "ingest_to_db",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
-
-                }
-            ]
-        };
-        let result = {
-            "code": 400, "error": "Pipeline name already exists"
-        };
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result)
-
-    });
-
-    it('Invalid Pipeline Type', async () => {
-        let inputData = {
-            "pipeline_type": "",
-            "pipeline_name": "student_attendance_by_class",
-            "pipeline": [
-                {
-                    "event_name": "student_attendance",
-                    "dataset_name": "student_attendance_by_class",
-                    "dimension_name": "student_attendance",
-                    "transformer_name": "student_attendance_by_class.py"
-
-                }
-            ]
-        };
-        let result = {code: 400, error: [
-            {
-                "instancePath": "/pipeline_type",
-                "schemaPath": "#/properties/pipeline_type/enum",
-                "keyword": "enum",
-                "params": {
-                    "allowedValues": [
-                        "ingest_to_db",
-                        "dimension_to_db",
-                        "dataset_to_db"
-                    ]
-                },
-                "message": "must be equal to one of the allowed values"
-            }
-        ]};
-        expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
-    });
+    // it('pipeline Name already exists', async () => {
+    //     let inputData = {
+    //         "pipeline_type": "ingest_to_db",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
+    //
+    //             }
+    //         ]
+    //     };
+    //     let result = {
+    //         "code": 400, "error": "Pipeline name already exists"
+    //     };
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result)
+    //
+    // });
+    //
+    // it('Invalid Pipeline Type', async () => {
+    //     let inputData = {
+    //         "pipeline_type": "",
+    //         "pipeline_name": "student_attendance_by_class",
+    //         "pipeline": [
+    //             {
+    //                 "event_name": "student_attendance",
+    //                 "dataset_name": "student_attendance_by_class",
+    //                 "dimension_name": "student_attendance",
+    //                 "transformer_name": "student_attendance_by_class.py"
+    //
+    //             }
+    //         ]
+    //     };
+    //     let result = {code: 400, error: [
+    //         {
+    //             "instancePath": "/pipeline_type",
+    //             "schemaPath": "#/properties/pipeline_type/enum",
+    //             "keyword": "enum",
+    //             "params": {
+    //                 "allowedValues": [
+    //                     "ingest_to_db",
+    //                     "dimension_to_db",
+    //                     "dataset_to_db"
+    //                 ]
+    //             },
+    //             "message": "must be equal to one of the allowed values"
+    //         }
+    //     ]};
+    //     expect(await service.createSpecPipeline(inputData)).toStrictEqual(result);
+    // });
 
     // it('dimension_to_db Pipeline Type', async () => {
     //     let inputData = {

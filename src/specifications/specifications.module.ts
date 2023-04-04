@@ -12,7 +12,7 @@ import {HttpModule} from '@nestjs/axios';
 import { PipelineService } from '../specifications/service/pipeline-old/pipeline.service';
 import {ScheduleService} from './service/schedule/schedule.service';
 import {S3Service} from './service/s3/s3.service';
-import { PipelineGenericService } from './service/pipeline-generic/piepline-generic.service';
+import { PipelineGenericService } from './service/pipeline-generic/pipeline-generic.service';
 import {Grammar} from "./service/grammar/grammar.service";
 
 @Module({
