@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { PipelineGenericService } from './pipeline-generic.service';
 
 describe('PipelineGenericService', () => {
