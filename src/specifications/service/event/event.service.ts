@@ -11,13 +11,12 @@ export class EventService {
     }
 
     async createEvent(eventDTO) {
-        let newObj = this.specService.convertKeysToLowerCase(eventDTO);
-        const isValidSchema: any = await this.specService.ajvValidator(masterSchema, newObj);
+        const isValidSchema: any = await this.specService.ajvValidator(masterSchema, eventDTO);
         if (isValidSchema.errors) {
             return {"code": 400, error: isValidSchema.errors}
         } else {
             let queryResult = checkName('program', "EventGrammar");
-            queryResult = queryResult.replace('$1', `${eventDTO?.program.toLowerCase()}`);
+            queryResult = queryResult.replace('$1', `${eventDTO?.program}`);
             const resultDname: any = await this.dataSource.query(queryResult);
             if (resultDname?.length > 0) {
                 return {"code": 400, "error": "Program already exists"};
@@ -27,10 +26,10 @@ export class EventService {
                     await queryRunner.connect();
                     await queryRunner.startTransaction();
                     let insertQuery = insertSchema(['program', 'schema', '"eventType"', 'name', '"updatedAt"'], 'EventGrammar');
-                    insertQuery = insertQuery.replace('$1', `'${eventDTO.program.toLowerCase()}'`);
-                    insertQuery = insertQuery.replace('$2', `'${JSON.stringify(newObj.input)}'`);
+                    insertQuery = insertQuery.replace('$1', `'${eventDTO.program}'`);
+                    insertQuery = insertQuery.replace('$2', `'${JSON.stringify(eventDTO.input)}'`);
                     insertQuery = insertQuery.replace('$3', `'EXTERNAL'`);
-                    insertQuery = insertQuery.replace('$4', `'${eventDTO.program.toLowerCase()}'`);
+                    insertQuery = insertQuery.replace('$4', `'${eventDTO.program}'`);
                     insertQuery = insertQuery.replace('$5', 'CURRENT_TIMESTAMP');
                     const insertResult = await queryRunner.query(insertQuery);
                     if (insertResult?.length > 0) {
